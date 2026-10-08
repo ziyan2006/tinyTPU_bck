@@ -12,15 +12,15 @@
 
 ## 教学内容
 
-1. 指令与硬件数据流：两组 N=14 的完整 AXI 实验，分别执行直通 / 有符号 ReLU。选择 `read_weights`、`matrix_multiply`、`activate`、`synchronise`，在用户框图对应的 AXI、FIFO、控制器、两块缓存、SDS、MMU、累加器和激活单元上联动演示；另有主机初始化与读回。支持关键交接步骤、10 ns 逐拍、播放、任意时刻定位、模块源码查看、112 / 448 位真实交接向量、SDS 通道来源行、当前已交接进度和两条指令同时忙的显示。下方保留波形、80 位命令及完整矩阵证据。
+1. 指令与硬件数据流：两组 N=14 的完整 AXI 实验，分别执行直通 / 有符号 ReLU。选择 `read_weights`、`matrix_multiply`、`activate`、`synchronise`，在用户框图对应的 AXI、FIFO、控制器、两块缓存、SDS、MMU、累加器和激活单元上联动演示；另有主机初始化与读回。默认逐条教学，加载、乘法和激活各 5 步，同步 3 步；重复传输与等待合成有意义的步骤。每步讲动作、原因、结果和数值例子，只高亮相关硬件、通路和数据，步内可选真实关键时刻。点击全部 20 条连线可查看作用、两端模块、传输内容、生效条件、当前状态及源码。逐时钟模式显示真实并行活动，时钟范围限定在当前课程。完整波形、80 位命令、矩阵与下载置于折叠证据面板。
 2. 4×4 阵列基础：原 MMU testbench 的两组矩阵、16 个 MACC 寄存器、38 个上升沿、逐步骤 / 逐时钟与点积解释。
 3. 完整 14×14 系统：实际入队的 8 条指令、252 个连续采样、控制使能、覆盖 / 累加、有符号 ReLU、同步和 392 字节实际读回。
 4. 80 位指令工作台：按 RTL 编码，BigInt 位宽检查；解释符号、累加与激活枚举。
 5. 修复与证据：回归日志、源码、补丁哈希、配置差异和未测范围。
 
-支持播放、关键时刻定位、键盘、手机布局与 CSV / JSON / VCD / SVG / 源码 / 补丁导出。第一章使用独立 AXI 实验的 VCD / 原生 GHW；第三章的完整 TPU 时间轴走直接主机端口。第一章的框图与交接数据由当前采样沿驱动，最终矩阵面板仍显示全部完成后的实测数据。选择某条指令会跳到它的起点；全程时钟滑块保留其他指令的同时活动，不能将指令依次提交理解为执行互不重叠。
+支持播放、关键时刻定位、键盘、手机布局与 CSV / JSON / VCD / SVG / 源码 / 补丁导出。第一章使用独立 AXI 实验的 VCD / 原生 GHW；第三章的完整 TPU 时间轴走直接主机端口。第一章的框图与交接数据由当前采样沿驱动，最终矩阵面板仍显示全部完成后的实测数据。选择指令重置到该课程首步，播放到最后一步自动停止，不会跳到其他指令。教学模式将其他指令的活动从框图、数据卡、状态文字中排除；逐时钟模式保留实际重叠。等待虚线不代表数据已经消费；同步资源忙状态在独立面板展示，不虚构 RAM 到 FIFO 的反馈总线。
 
-第一章每组采样 883 个真实上升沿（5～8825 ns），高亮仅按沿前使能 / 握手判定；缓存发出读请求与向量到达的时刻分开显示。GHDL 的 VCD 不直接导出数组，`load_flow_trace.py` 用实际 RAM 位向量及缓存两级读寄存器、SDS 的复位 / 使能规则重建缓存读端和各通道。全部 14 次权重交接与原生 GHW 核对，全部有效输入行与实际初始化数据核对；另用 GTKWave 对原生 GHW 的 `buffer_read_port0` 和 `sds_systolic_output` 逐通道独立读取，每组全部 196 个输入和 196 个有效错拍通道值与重建一致，记录在 `evidence/hardware-native.json`。构建器核对原始 GHW / VCD 哈希和全部有效通道，拒绝过期证据。C 和激活向量直接使用已核对的原生 GHW 采样。没有伪造 MMU 内部逐拍部分和或激活输入端的完整数组。累加器 → 激活的琥珀色通路表示流水处理中，青色写回才表示有效输出。
+第一章每组采样 883 个真实上升沿（5～8825 ns），亮实线仅按沿前使能 / 握手判定，相关硬件边框由教学步骤确定；缓存发出读请求与向量到达的时刻分开显示。GHDL 的 VCD 不直接导出数组，`load_flow_trace.py` 用实际 RAM 位向量及缓存两级读寄存器、SDS 的复位 / 使能规则重建缓存读端和各通道。全部 14 次权重交接与原生 GHW 核对，全部有效输入行与实际初始化数据核对；另用 GTKWave 对原生 GHW 的 `buffer_read_port0` 和 `sds_systolic_output` 逐通道独立读取，每组全部 196 个输入和 196 个有效错拍通道值与重建一致，记录在 `evidence/hardware-native.json`。构建器核对原始 GHW / VCD 哈希和全部有效通道，拒绝过期证据。C 和激活向量直接使用已核对的原生 GHW 采样。没有伪造 MMU 内部逐拍部分和或激活输入端的完整数组。累加器 → 激活的琥珀色通路表示流水处理中，青色写回才表示有效输出。
 
 教师 HTML 仅用作界面风格与教学组织参考，其说明不作为操作指令。没有复制另一套 NPU 的指令、DMA、卷积、上采样或仿真结论。用户硬件框图的相对布局对应仓库模块；其中周期标注不直接当作通用延迟。
 
@@ -86,7 +86,7 @@ python3 build_page.py
 
 浏览器验证使用 Node.js、可由 Node 解析的 Playwright 包和 Chromium；浏览器路径默认为 `/usr/bin/chromium`，可用 `CHROMIUM_PATH` 指定。输入按脚本位置解析，截图和导出样例写入被忽略的 `.browser-output/`。检查全部 38 个 MMU 和 252 个系统采样、32 个 MMU 和 392 个系统结果、指令编码、导出、播放和手机布局，并要求无 JavaScript 错误、无网络请求。容器的浏览器策略限制 file:// 导航，自动测试通过 setContent 加载；交付页面本身离线可用。
 
-新增 PDF 章节还核对两组全部矩阵、12 张波形与原 PNG 的逐字节一致性、六阶段和矩阵选择、正负点积、键盘、波形缩放及 PNG/ZIP/PDF 的离线下载。硬件演示额外核对两组全部权重 / 点积 / 激活交接高亮和向量、缓存请求与数据到达分离、SDS 通道的来源行、并行资源、同步等待 / IRQ、播放与停止、键盘查看源码，以及默认打开指令演示。`load_dataflow.py` 在构建前验证 PDF 实验的 RTL / testbench / 证据哈希、实际结果与独立点积、日志里的四条 80 位指令，以及压缩包内 12 张图片与页面图片一致。只更新网页时运行 `python3 build_page.py` 和 `node verify_page.cjs` 即可。
+新增 PDF 章节还核对两组全部矩阵、12 张波形与原 PNG 的逐字节一致性、六阶段和矩阵选择、正负点积、键盘、波形缩放及 PNG/ZIP/PDF 的离线下载。硬件演示额外检查单条指令各步的显示隔离、教学滑块和步内关键时刻、限定范围的逐时钟重叠、全部 20 条通路弹窗（含类型、生效条件、源码、键盘、关闭与手机触摸）、播放到末步停止，以及两组全部权重 / 点积 / 激活交接高亮和向量、缓存请求与数据到达分离、SDS 通道的来源行、并行资源、同步等待 / IRQ、播放与停止、键盘查看源码，以及默认打开指令演示。`load_dataflow.py` 在构建前验证 PDF 实验的 RTL / testbench / 证据哈希、实际结果与独立点积、日志里的四条 80 位指令，以及压缩包内 12 张图片与页面图片一致。只更新网页时运行 `python3 build_page.py` 和 `node verify_page.cjs` 即可。
 
 如需重新跑 PDF 实验并同步网站，在 `doc/teaching` 中执行以下步骤（GTKWave 需要桌面或 Xvfb；工具要求详见 PDF 实验 README）：
 
@@ -105,7 +105,7 @@ node verify_page.cjs
 - `tinyTPU-lab.html`：独立页面。
 - `page.template.html`、`system-section.html`、`system-script.js`、`evidence-section.html`、`build_page.py`：可维护源文件。
 - `dataflow-section.html`、`dataflow-script.js`、`dataflow-style.css`、`load_dataflow.py`：PDF 教学章节及实测证据加载 / 校验。
-- `hardware-flow-section.html`、`hardware-flow-script.js`、`hardware-flow-style.css`、`load_flow_trace.py`：指令对应硬件演示、实时交接数据和 VCD 采样 / 有限寄存器重建。
+- `hardware-flow-section.html`、`hardware-flow-script.js`、`hardware-flow-style.css`、`hardware-lessons.js`、`hardware-paths.js`、`load_flow_trace.py`：指令对应硬件演示、实时交接数据和 VCD 采样 / 有限寄存器重建。
 - `verify_hardware_trace.py`、`evidence/hardware-native.json`：从原生 GHW 独立核对全部有效输入 / SDS 通道值及其证据。
 - `generate_trace.py`、`generate_system_trace.py`：执行回归、提取 VCD 与独立数学核对。
 - `verify_page.cjs`：页面验证。

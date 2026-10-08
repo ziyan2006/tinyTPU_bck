@@ -21,8 +21,8 @@ logs={p.name:p.read_text() for p in (OUT/'evidence').glob('*.log')}
 logs['fixes.patch']=(OUT/'evidence/fixes.patch').read_text()
 logs['mmu.vcd']=(OUT/'evidence/mmu.vcd').read_text()
 s=(OUT/'page.template.html').read_text()
-for key,name in [('SYSTEM_SECTION','system-section.html'),('SYSTEM_SCRIPT','system-script.js'),('EVIDENCE_SECTION','evidence-section.html'),('DATAFLOW_SECTION','dataflow-section.html'),('DATAFLOW_SCRIPT','dataflow-script.js'),('DATAFLOW_STYLE','dataflow-style.css'),('HARDWARE_FLOW_SECTION','hardware-flow-section.html'),('HARDWARE_FLOW_STYLE','hardware-flow-style.css'),('HARDWARE_FLOW_SCRIPT','hardware-flow-script.js')]: s=s.replace('__'+key+'__',(OUT/name).read_text())
+for key,name in [('SYSTEM_SECTION','system-section.html'),('SYSTEM_SCRIPT','system-script.js'),('EVIDENCE_SECTION','evidence-section.html'),('DATAFLOW_SECTION','dataflow-section.html'),('DATAFLOW_SCRIPT','dataflow-script.js'),('DATAFLOW_STYLE','dataflow-style.css'),('HARDWARE_FLOW_SECTION','hardware-flow-section.html'),('HARDWARE_FLOW_STYLE','hardware-flow-style.css'),('HARDWARE_LESSONS_SCRIPT','hardware-lessons.js'),('HARDWARE_PATHS_SCRIPT','hardware-paths.js'),('HARDWARE_FLOW_SCRIPT','hardware-flow-script.js')]: s=s.replace('__'+key+'__',(OUT/name).read_text())
 for key,obj in [('SYSTEM',system),('TRACE',trace),('SOURCES',sources),('LOGS',logs),('PDF_FLOW',dataflow)]: s=s.replace('__'+key+'__',json.dumps(obj,ensure_ascii=False).replace('</','<\\/'))
-assert '__PDF_FLOW__' not in s and '__DATAFLOW_' not in s, 'Missing dataflow template replacement'
+assert '__PDF_FLOW__' not in s and '__DATAFLOW_' not in s and '__HARDWARE_' not in s, 'Missing dataflow template replacement'
 (OUT/'tinyTPU-lab.html').write_text(s)
 print('Built standalone HTML:',len(s.encode()),'bytes')

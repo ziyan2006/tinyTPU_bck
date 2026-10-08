@@ -1,26 +1,39 @@
 <div class="panel toolbar hw-toolbar">
-  <div class="field"><label for="hw-instruction">演示哪条指令</label><select id="hw-instruction"><option value="1">read_weights · 加载权重</option><option value="2">matrix_multiply · 矩阵乘法</option><option value="3">activate · 激活回写</option><option value="4">synchronise · 等待完成</option><option value="0">主机初始化缓存</option><option value="5">主机读回结果</option></select></div>
-  <div class="field"><label for="hw-mode">推进方式</label><select id="hw-mode"><option value="step">教学步骤 · 关键交接</option><option value="clock">逐时钟 · 10 ns / 拍</option></select></div>
+  <div class="field"><label for="flow-case">选择具体实验</label><select id="flow-case"><option value="passthrough">直通 · 0x80 · 无符号输入</option><option value="relu">有符号 ReLU · 0x91 · 正负输入</option></select></div>
+  <div class="field"><label for="hw-instruction">一次学习一条指令</label><select id="hw-instruction"><optgroup label="NPU 指令"><option value="1">read_weights · 加载权重</option><option value="2">matrix_multiply · 矩阵乘法</option><option value="3">activate · 激活回写</option><option value="4">synchronise · 等待完成</option></optgroup><optgroup label="前置准备 / 结果验证"><option value="0">主机初始化缓存</option><option value="5">主机读回结果</option></optgroup></select></div>
+  <div class="field"><label for="hw-mode">推进方式</label><select id="hw-mode"><option value="step">教学步骤 · 单条指令</option><option value="clock">逐时钟 · 显示真实并行活动</option></select></div>
   <div class="buttons"><button id="hw-reset">↺ 重新开始</button><button id="hw-prev">← 上一步</button><button id="hw-play" class="primary">▶ 播放</button><button id="hw-next">下一步 →</button></div>
-  <div class="field"><label for="hw-speed">播放速度</label><select id="hw-speed"><option value="900">慢速 · 0.9 秒</option><option value="400" selected>正常 · 0.4 秒</option><option value="150">快速 · 0.15 秒</option></select></div>
+  <div class="field"><label for="hw-speed">播放速度</label><select id="hw-speed"><option value="2400" selected>讲解 · 2.4 秒 / 步</option><option value="900">较快 · 0.9 秒</option><option value="150">快速回放 · 0.15 秒</option></select></div>
 </div>
 <div class="hw-command" id="hw-command"></div>
+<div class="panel lesson" id="hw-lesson">
+  <span class="eyebrow">ONE INSTRUCTION / 先理解动作，再对照真实时刻</span>
+  <p class="hw-goal" id="hw-goal"></p><p class="muted" id="hw-prerequisite"></p>
+  <div class="chips hw-step-chips" id="hw-step-chips" role="group" aria-label="选择当前指令的教学步骤"></div>
+  <div class="lesson-grid"><div><h2 id="hw-step-title"></h2><p class="action" id="hw-action"></p><div class="reasons"><div><span>为什么需要这一步？</span><p id="hw-why"></p></div><div><span>这一步带来什么？</span><p id="hw-result"></p></div></div></div><div class="example"><span class="eyebrow">把数值和动作联系起来</span><p id="hw-example"></p><p class="muted" id="hw-example-note"></p><div id="hw-resource-status" class="hw-resource-status" hidden></div></div></div>
+  <div class="hw-moment-tools"><p class="muted" id="hw-moment-range"></p><div class="chips" id="hw-moments" role="group" aria-label="查看本步骤的真实关键时刻"></div></div>
+  <p class="hw-context" id="hw-context"></p><div class="progress"><i id="hw-step-progress"></i></div>
+</div>
 <div class="panel clock-strip">
-  <div class="readout"><span class="eyebrow">真实仿真采样沿</span><strong id="hw-time"></strong><span id="hw-cycle" class="muted"></span></div>
-  <div class="timeline"><div><span>5 ns · 初始化</span><span>8825 ns · 全部读回</span></div><input id="hw-timeline" type="range" min="0" max="882" value="478" aria-label="选择实际仿真时钟"><div><span>拖动查看任意一拍；图中保留同时进行的指令</span><span id="hw-progress"></span></div></div>
+  <div class="readout"><span class="eyebrow">框图对应的真实采样沿</span><strong id="hw-time"></strong><span id="hw-cycle" class="muted"></span></div>
+  <div class="timeline"><div><span id="hw-range-start"></span><span id="hw-range-end"></span></div><input id="hw-timeline" type="range" min="0" max="4" value="0" aria-label="选择当前指令的教学步骤"><div><span id="hw-timeline-note"></span><span id="hw-progress"></span></div></div>
 </div>
 <div class="workspace hw-workspace">
   <div class="panel">
-    <div class="head"><div><span class="eyebrow">HARDWARE × INSTRUCTIONS</span><h3>跟着数据走过你的硬件框图</h3></div><div class="legend"><span><i style="background:var(--cyan)"></i>本沿传输 / 采样</span><span><i style="background:var(--amber)"></i>流水处理中</span><span><i style="background:var(--pink)"></i>同步等待</span></div></div>
-    <div class="diagram-wrap"><svg id="hw-diagram" viewBox="0 -75 920 650" role="img" aria-label="tinyTPU 指令数据流硬件框图"><defs><marker id="hw-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8" fill="context-stroke"/></marker></defs><g id="hw-edges"></g><g id="hw-modules"></g></svg></div>
-    <div class="diagram-foot"><span>点击模块查看对应功能、端口和 RTL。布局对应你提供的框图。</span><span id="hw-overlap"></span></div>
+    <div class="head"><div><span class="eyebrow">HARDWARE × DATAFLOW</span><h3>本步骤涉及哪些硬件、哪条通路？</h3></div><div class="legend"><span><i style="background:var(--cyan)"></i>本沿有效交接</span><span><i style="background:var(--amber)"></i>流水处理中</span><span><i style="background:var(--pink)"></i>同步等待</span></div></div>
+    <div class="diagram-wrap"><svg id="hw-diagram" viewBox="0 -75 920 650" aria-label="tinyTPU 指令数据流硬件框图"><defs><marker id="hw-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8" fill="context-stroke"/></marker></defs><g id="hw-edges"></g><g id="hw-modules"></g></svg></div>
+    <div class="diagram-foot"><span>青色边框为相关硬件；亮实线为有效交接。点击连线弹出作用说明；点击硬件查看功能与 RTL。手机可横向滑动框图。</span><span id="hw-overlap"></span></div>
   </div>
   <aside class="panel inspector hw-inspector">
-    <span class="eyebrow">这一拍发生了什么</span><h3 id="hw-event-title"></h3><p id="hw-event-note"></p><div id="hw-transfers" class="hw-transfers"></div>
+    <span class="eyebrow">动作与沿前采样</span><h3 id="hw-event-title"></h3><p id="hw-event-note"></p><div id="hw-transfers" class="hw-transfers"></div>
     <div class="port"><span class="eyebrow">选中的硬件</span><h3 id="hw-module-title"></h3><p id="hw-module-note"></p><p id="hw-module-ports"></p><button id="hw-source" class="quiet">查看对应 RTL ↗</button></div>
   </aside>
 </div>
 <div class="panel hw-data-panel">
-  <div class="head"><div><span class="eyebrow">LIVE PAYLOAD / 沿前数据</span><h3>地址、使能和这次交接的数据</h3></div></div>
-  <div class="section-body"><div id="hw-controls" class="hw-controls"></div><div id="hw-payloads" class="hw-payloads"></div><div id="hw-lanes" class="hw-lanes"></div><div id="hw-calculation" class="hw-calculation"></div><div id="hw-memory" class="hw-memory"></div><p class="wave-note">高亮以沿前使能或 AXI VALID/READY 握手为准。权重、C 与激活输出来自原生 GHW；缓存读流水和 SDS 由 VCD 的 RAM 数据及 RTL 寄存规则重建。相邻通道可能属于不同行，不能把错拍数据拼成一行。下方完整矩阵是最终证据，此处只显示已经发生的交接。</p></div>
+  <div class="head"><div><span class="eyebrow">ONLY THIS STEP / 沿前有效数据</span><h3>与本步骤有关的控制和数据</h3></div></div>
+  <div class="section-body"><div id="hw-controls" class="hw-controls"></div><div id="hw-payloads" class="hw-payloads"></div><div id="hw-lanes" class="hw-lanes"></div><div id="hw-calculation" class="hw-calculation"></div><div id="hw-memory" class="hw-memory"></div><p class="wave-note">亮实线表示该沿的有效传输或控制采样；相关硬件用高亮边框，虚线表示流水处理或等待。权重、C 与激活输出来自原生 GHW；缓存输出和 SDS 由 VCD 与 RTL 寄存规则重建。完整矩阵和原始波形在下方证据面板。</p></div>
 </div>
+<dialog id="hw-path-dialog" aria-labelledby="hw-path-title">
+  <div class="dialog-head"><div><span class="eyebrow" id="hw-path-endpoints"></span><h2 id="hw-path-title"></h2></div><button data-close="hw-path-dialog" aria-label="关闭通路说明">关闭 ✕</button></div>
+  <div class="hw-path-body"><p class="hw-path-purpose" id="hw-path-purpose"></p><dl><dt>通路类型</dt><dd id="hw-path-kind"></dd><dt>传递什么</dt><dd id="hw-path-payload"></dd><dt>什么时候解释为有效</dt><dd id="hw-path-validity"></dd></dl><p class="hw-path-current" id="hw-path-current"></p><p id="hw-path-events"></p><button id="hw-path-source" class="quiet">查看这条通路对应的 RTL ↗</button></div>
+</dialog>
