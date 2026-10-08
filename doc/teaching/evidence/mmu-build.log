@@ -1,0 +1,6 @@
+$ /workspace/tinytpu-env/bin/ghdl -m --std=08 -frelaxed-rules TB_MATRIX_MULTIPLY_UNIT
+/workspace/tinyTPU_bck/src/vhdl/MMU/MATRIX_MULTIPLY_UNIT.vhdl:77:5:warning: component specification applies to no instance [-Wspecs]
+    for all : MACC use entity WORK.MACC(BEH);
+    ^
+
+exit_status=0

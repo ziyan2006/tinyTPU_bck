@@ -214,6 +214,14 @@ begin
                 if to_integer(unsigned(ACC_READ_ADDRESS)) < REGISTER_DEPTH then
                 --synthesis translate_on
                     ACC_READ_PORT <= BITS_TO_WORD_ARRAY(ACCUMULATORS(to_integer(unsigned(ACC_READ_ADDRESS))));
+                --synthesis translate_off
+                end if;
+                --synthesis translate_on
+                -- The accumulation read is an independent mirrored RAM port.
+                -- An idle/out-of-range activation address must not freeze it.
+                --synthesis translate_off
+                if to_integer(unsigned(ACC_ACCU_ADDRESS)) < REGISTER_DEPTH then
+                --synthesis translate_on
                     ACC_ACCUMULATE_PORT <= BITS_TO_WORD_ARRAY(ACCUMULATORS_COPY(to_integer(unsigned(ACC_ACCU_ADDRESS))));
                 --synthesis translate_off
                 end if;

@@ -1,0 +1,4 @@
+$ /workspace/tinytpu-env/bin/ghdl -r --std=08 -frelaxed-rules TB_REGISTER_FILE --assert-level=error
+/workspace/tinyTPU_bck/src/vhdl/Register_File/TB_REGISTER_FILE.vhdl:191:9:@1136ns:(report note): Test was successful! 40 lane comparisons: overwrite, accumulation, independent read, stall and resume
+
+exit_status=0

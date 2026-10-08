@@ -1,0 +1,27 @@
+<section id="evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
+<div class="notice"><strong>结论绑定基础提交与修复版本。</strong>原始 4×4 MMU 测试保持不变；FIFO、累加器与 AXI 修复后，新增 / 修订的自检 testbench 实际运行通过。页面使用这些运行的 VCD 和日志，修复补丁与源码一并交付。</div>
+<div class="status-row"><div class="status-card"><span class="eyebrow">通过 / 原始 MMU</span><b>32 个结果</b><p>4×4 UINT8 / INT8 两组，155 ns / 345 ns 报告成功。</p></div><div class="status-card"><span class="eyebrow">通过 / 完整 TPU</span><b>392 输出字节</b><p>N=14，两轮覆盖 / 累加 + 有符号 ReLU + 同步，2516 ns 结束。</p></div><div class="status-card"><span class="eyebrow">通过 / AXI 完整链路</span><b>392 + 56 字节</b><p>实际输出及末字填充验证；握手、背压与地址仲裁，23646 ns 结束。</p></div></div>
+<div class="panel"><div class="head"><div><span class="eyebrow">01 / FIXES</span><h3>先解决失败，再扩大教学覆盖</h3></div><button class="quiet" id="patch-download">下载修复补丁 ↓</button></div><div class="section-body"><div class="table-scroll"><table><thead><tr><th>问题与触发条件</th><th>修复</th><th>实际验证</th></tr></thead><tbody>
+<tr><td>FIFO 使用 generic 作为 case 分支，GHDL 无法编译完整 TPU</td><td>改为等价的 if / elsif 判断</td><td>TPU 与 AXI 顶层编译；FF / RAM 两种 FIFO，各测深度 3 和 32</td></tr>
+<tr><td>寄存器测试在换读地址后仅等 1 ns，早于写入和同步读数据到达</td><td>等待六级写流水线与同步 RAM；保留覆盖 / 累加断言，并测试使能暂停</td><td>40 项数据比较通过，1136 ns 正常结束</td></tr>
+<tr><td>普通读地址越界时，RAM 仿真模型同时禁止另一条有效的累加读通路；长 AXI 传输间隔使第二轮加上旧值</td><td>RAM 仿真模型的普通读与累加读分别检查各自地址边界</td><td>独立回归覆盖普通读地址越界；两套 N=14 系统验证真实二轮累加</td></tr>
+<tr><td>AXI 写数据已握手后仍使用主机实时 WSTRB；读请求依赖 RREADY；响应不能保持；同时读写地址可能丢失</td><td>锁存写掩码；独立发起读；保持 RVALID 至接收；忙时阻止未接收的读地址握手</td><td>字节掩码、撤走 WDATA / WSTRB、B / R 背压、同时 AW / AR 及完整计算均自检通过</td></tr>
+</tbody></table></div><p class="sidenote">修复前两项失败日志保存在交付包 evidence/history。源码改动可通过 fixes.patch 逐项审查；不关闭断言，也不把 --stop-time 到期当作通过。</p></div></div>
+<div class="panel"><div class="head"><div><span class="eyebrow">02 / PROVENANCE</span><h3>仿真依据与可复现命令</h3></div><div class="split-actions"><button class="quiet" id="vcd-download">下载 MMU 原始 VCD ↓</button><button class="quiet" id="json-download">下载 MMU JSON ↓</button></div></div><div class="section-body"><p class="muted" id="provenance" style="overflow-wrap:anywhere"></p><pre id="commands"></pre><div class="table-scroll"><table><thead><tr><th>回归目标 / 参数</th><th>状态</th><th>原始日志文件</th></tr></thead><tbody><tr><td><code>TB_MATRIX_MULTIPLY_UNIT</code></td><td class="pass">通过</td><td><code>mmu-run.log</code></td></tr></tbody><tbody id="regression-summary"></tbody></table></div>
+<details open><summary>原始矩阵乘法运行日志（保留警告）</summary><pre id="mmu-log"></pre></details>
+<details><summary>FIFO 两种实现、两种深度与指令组装日志</summary><pre id="fifo-log"></pre></details>
+<details><summary>完整 TPU 编译日志</summary><pre id="tpu-log"></pre></details>
+<details><summary>寄存器覆盖 / 累加 / 边界 / 暂停回归日志</summary><pre id="register-log"></pre></details>
+<details><summary>完整 N=14 TPU 系统自检日志</summary><pre id="system-log"></pre><button class="quiet" data-source="src/vhdl/TB_TPU.vhdl">查看自检 testbench ↗</button></details>
+<details><summary>AXI 握手与完整系统自检日志</summary><pre id="axi-log"></pre><button class="quiet" data-source="src/vhdl/AXI/TB_tinyTPU_v1_0_S00_AXI.vhd">查看 AXI testbench ↗</button></details>
+<details><summary>警告为什么保留？</summary><p>原 MMU testbench 用 to_signed(value, 8) 编码部分大于 127 的无符号数据，GHDL 因此报告 vector truncated；以无符号模式进入 MMU 后，16 个输出比较仍通过。同步 RAM 的未初始化数据在启动 / 排空阶段还会触发 numeric_std 的未知值警告。本次保留这些警告与 error 级停止检查，最终只认可实际断言和成功报告。</p><p>GHDL 采用 VHDL-2008；-frelaxed-rules 用于仓库现有共享变量双口 RAM 模型。没有验证严格模式下的原 RAM 模型。</p></details>
+<details><summary>真实轨迹如何采样与核对？</summary><p>MMU VCD 不直接输出 BYTE_ARRAY / WORD_ARRAY。生成器采集 16 个 MACC 的标量寄存器，按 RESULT_ASSIGNMENT 从末行 21 位部分和及符号移位寄存器重建输出；核对两组共 32 个预期元素，保留全部 38 个上升沿。</p><p>完整 TPU testbench 增加仅用于观察的 112 位主机输入 / 权重 / 输出总线镜像；系统生成器核对实际读回总线、392 个独立数学预期值与自检日志。保留 252 个连续上升沿、8 条实际入队指令及执行控制使能。输入 / 控制采沿前值，寄存器 / 主机输出采沿后稳定值；日志检查发生在沿后 1 ns，页面到达报告之后才显示已核对结果。</p><p>10 ns 为 testbench 时钟，不代表综合后频率。完整 TPU 轨迹走直接主机端口，框图的 AXI 保持无高亮；AXI 回归有独立日志和自检，不在此时间轴假造握手或 IRQ 波形。原始 system.vcd 在交付包中。</p><pre id="hashes"></pre></details>
+</div></div>
+<div class="panel"><div class="head"><div><span class="eyebrow">03 / SCOPE</span><h3>本轮验证的范围</h3></div></div><div class="section-body"><div class="table-scroll"><table><thead><tr><th>能力</th><th>结论</th><th>边界</th></tr></thead><tbody>
+<tr><td>有符号加载、乘法、覆盖与二轮累加、ReLU、同步及主机读回</td><td class="pass">模块与两套完整系统通过</td><td>N=14；A[i,j]=4(i−j)，W=64I；TPU 测试缓存深度 32 / 64，AXI 采用默认容量</td></tr>
+<tr><td>AXI 字节写、响应背压与并发地址仲裁</td><td class="pass">指定回归通过</td><td>这些检查不等于覆盖整个 AXI 协议空间</td></tr>
+<tr><td>Sigmoid、ReLU 饱和边界、随机长序列、其他旧 testbench</td><td>未验证</td><td>不把当前两轮样例推广为任意网络或所有边界输入已正确</td></tr>
+<tr><td>Python 输入转换</td><td class="pass">环境设置时通过</td><td>N=2 的拆块与转置；TensorFlow 训练未验证</td></tr>
+<tr><td>Vivado 综合、时序、SDK / BSP、Zynq 板卡</td><td>未验证</td><td>需要对应工具链与板卡；README 的 177.77 MHz / 72.18 GOPS 是历史评估</td></tr>
+</tbody></table></div><p class="sidenote">你的框图中的 AXI、FIFO、控制器、统一缓存、权重缓存、数据准备、MMU、累加器、激活均能对应实际 RTL。&gt;3、&gt;7、&gt;16 等标注需结合起点、参数与流水线解释；页面使用本次真实采样时刻，不把框图数字作为所有场景的通用延迟。</p></div></div>
+</section>

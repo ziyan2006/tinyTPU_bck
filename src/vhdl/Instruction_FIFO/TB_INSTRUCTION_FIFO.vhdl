@@ -150,7 +150,7 @@ begin
         end if;
         
         report "Test was successful!" severity NOTE;
-        --stop_the_clock <= true;
+        stop_the_clock <= true;
         wait;
     end process STIMULUS;
     

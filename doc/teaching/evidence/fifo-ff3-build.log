@@ -1,0 +1,3 @@
+$ /workspace/tinytpu-env/bin/ghdl -m --std=08 -frelaxed-rules TB_FIFO
+
+exit_status=0

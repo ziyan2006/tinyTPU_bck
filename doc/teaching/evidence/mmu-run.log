@@ -1,0 +1,12 @@
+$ /workspace/tinytpu-env/bin/ghdl -r --std=08 -frelaxed-rules TB_MATRIX_MULTIPLY_UNIT --assert-level=error --vcd=/workspace/tinyTPU_bck/doc/teaching/evidence/mmu.vcd
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@15ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@25ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@25ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@35ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@45ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@85ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@95ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+/workspace/tinyTPU_bck/src/vhdl/MMU/TB_MATRIX_MULTIPLY_UNIT.vhdl:326:9:@155ns:(report note): Test was successful!
+/workspace/tinyTPU_bck/src/vhdl/MMU/TB_MATRIX_MULTIPLY_UNIT.vhdl:326:9:@345ns:(report note): Test was successful!
+
+exit_status=0

@@ -1,0 +1,1151 @@
+diff --git a/src/vhdl/AXI/TB_tinyTPU_v1_0_S00_AXI.vhd b/src/vhdl/AXI/TB_tinyTPU_v1_0_S00_AXI.vhd
+index 3b7df0d..509259e 100644
+--- a/src/vhdl/AXI/TB_tinyTPU_v1_0_S00_AXI.vhd
++++ b/src/vhdl/AXI/TB_tinyTPU_v1_0_S00_AXI.vhd
+@@ -21,274 +21,188 @@
+ 
+ use WORK.TPU_pack.all;
+ library IEEE;
+-    use IEEE.std_logic_1164.all;
+-    use IEEE.numeric_std.all;
+-
+-entity TB_tinyTPU_v1_0_S00_AXI is
+-end entity TB_tinyTPU_v1_0_S00_AXI;
++use IEEE.std_logic_1164.all;
++use IEEE.numeric_std.all;
++use std.env.all;
+ 
++entity TB_tinyTPU_v1_0_S00_AXI is end entity;
+ architecture BEH of TB_tinyTPU_v1_0_S00_AXI is
+-    component DUT is
+-        generic (
+-            -- Users to add parameters here
+-
+-            -- User parameters ends
+-            -- Do not modify the parameters beyond this line
+-
+-            -- Width of S_AXI data bus
+-            C_S_AXI_DATA_WIDTH	: integer	:= 32;
+-            -- Width of S_AXI address bus
+-            C_S_AXI_ADDR_WIDTH	: integer	:= 20
+-        );
+-        port (
+-            -- Users to add ports here
+-
+-            -- User ports ends
+-            -- Do not modify the ports beyond this line
+-
+-            -- Global Clock Signal
+-            S_AXI_ACLK	: in std_logic;
+-            -- Global Reset Signal. This Signal is Active LOW
+-            S_AXI_ARESETN	: in std_logic;
+-            -- Write address (issued by master, acceped by Slave)
+-            S_AXI_AWADDR	: in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+-            -- Write channel Protection type. This signal indicates the
+-                -- privilege and security level of the transaction, and whether
+-                -- the transaction is a data access or an instruction access.
+-            S_AXI_AWPROT	: in std_logic_vector(2 downto 0);
+-            -- Write address valid. This signal indicates that the master signaling
+-                -- valid write address and control information.
+-            S_AXI_AWVALID	: in std_logic;
+-            -- Write address ready. This signal indicates that the slave is ready
+-                -- to accept an address and associated control signals.
+-            S_AXI_AWREADY	: out std_logic;
+-            -- Write data (issued by master, acceped by Slave) 
+-            S_AXI_WDATA	: in std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+-            -- Write strobes. This signal indicates which byte lanes hold
+-                -- valid data. There is one write strobe bit for each eight
+-                -- bits of the write data bus.    
+-            S_AXI_WSTRB	: in std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto 0);
+-            -- Write valid. This signal indicates that valid write
+-                -- data and strobes are available.
+-            S_AXI_WVALID	: in std_logic;
+-            -- Write ready. This signal indicates that the slave
+-                -- can accept the write data.
+-            S_AXI_WREADY	: out std_logic;
+-            -- Write response. This signal indicates the status
+-                -- of the write transaction.
+-            S_AXI_BRESP	: out std_logic_vector(1 downto 0);
+-            -- Write response valid. This signal indicates that the channel
+-                -- is signaling a valid write response.
+-            S_AXI_BVALID	: out std_logic;
+-            -- Response ready. This signal indicates that the master
+-                -- can accept a write response.
+-            S_AXI_BREADY	: in std_logic;
+-            -- Read address (issued by master, acceped by Slave)
+-            S_AXI_ARADDR	: in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+-            -- Protection type. This signal indicates the privilege
+-                -- and security level of the transaction, and whether the
+-                -- transaction is a data access or an instruction access.
+-            S_AXI_ARPROT	: in std_logic_vector(2 downto 0);
+-            -- Read address valid. This signal indicates that the channel
+-                -- is signaling valid read address and control information.
+-            S_AXI_ARVALID	: in std_logic;
+-            -- Read address ready. This signal indicates that the slave is
+-                -- ready to accept an address and associated control signals.
+-            S_AXI_ARREADY	: out std_logic;
+-            -- Read data (issued by slave)
+-            S_AXI_RDATA	: out std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+-            -- Read response. This signal indicates the status of the
+-                -- read transfer.
+-            S_AXI_RRESP	: out std_logic_vector(1 downto 0);
+-            -- Read valid. This signal indicates that the channel is
+-                -- signaling the required read data.
+-            S_AXI_RVALID	: out std_logic;
+-            -- Read ready. This signal indicates that the master can
+-                -- accept the read data and response information.
+-            S_AXI_RREADY	: in std_logic
+-        );
+-    end component DUT;
+-    for all : DUT use entity WORK.tinyTPU_v1_0_S00_AXI(arch_imp);
+-    
+-    signal CLK : std_logic;
+-    signal NRESET : std_logic;
+-    
+-    constant C_S_AXI_DATA_WIDTH	    : integer	:= 32;
+-    constant C_S_AXI_ADDR_WIDTH	    : integer	:= 20;
+-    
+-    signal S_AXI_AWADDR	    : std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+-    signal S_AXI_AWPROT	    : std_logic_vector(2 downto 0);
+-    signal S_AXI_AWVALID	: std_logic;
+-    signal S_AXI_AWREADY	: std_logic;
+-    signal S_AXI_WDATA	    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+-    signal S_AXI_WSTRB	    : std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto 0);
+-    signal S_AXI_WVALID	    : std_logic;
+-    signal S_AXI_WREADY	    : std_logic;
+-    signal S_AXI_BRESP	    : std_logic_vector(1 downto 0);
+-    signal S_AXI_BVALID	    : std_logic;
+-    signal S_AXI_BREADY	    : std_logic;
+-    signal S_AXI_ARADDR	    : std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+-    signal S_AXI_ARPROT	    : std_logic_vector(2 downto 0);
+-    signal S_AXI_ARVALID	: std_logic;
+-    signal S_AXI_ARREADY	: std_logic;
+-    signal S_AXI_RDATA	    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+-    signal S_AXI_RRESP	    : std_logic_vector(1 downto 0);
+-    signal S_AXI_RVALID	    : std_logic;
+-    signal S_AXI_RREADY	    : std_logic;
+-    
+-    -- for clock gen
+-    constant clock_period   : time := 10 ns;
+-    signal stop_the_clock   : boolean;
++    constant N : natural := 14;
++    signal CLK : std_logic := '0';
++    signal NRESET : std_logic := '0';
++    signal AWADDR, ARADDR : std_logic_vector(19 downto 0) := (others => '0');
++    signal AWVALID, WVALID, BREADY, ARVALID, RREADY : std_logic := '0';
++    signal AWREADY, WREADY, BVALID, ARREADY, RVALID : std_logic;
++    signal WDATA : WORD_TYPE := (others => '0');
++    signal RDATA : WORD_TYPE;
++    signal WSTRB : std_logic_vector(3 downto 0) := (others => '0');
++    signal BRESP, RRESP : std_logic_vector(1 downto 0);
++    signal SYNCHRONIZE : std_logic;
++    signal SYNC_COUNT : natural := 0;
++    signal ALWAYS_READY : std_logic := '1';
+ begin
+-    DUT_i : DUT
+-    generic map(
+-        C_S_AXI_DATA_WIDTH => C_S_AXI_DATA_WIDTH,
+-        C_S_AXI_ADDR_WIDTH => C_S_AXI_ADDR_WIDTH
+-    )
++    CLK <= not CLK after 5 ns;
++    DUT_i : entity WORK.tinyTPU_v1_0_S00_AXI(arch_imp)
+     port map(
+-        S_AXI_ACLK      => CLK,
+-        S_AXI_ARESETN   => NRESET,
+-        S_AXI_AWADDR    => S_AXI_AWADDR,
+-        S_AXI_AWPROT    => S_AXI_AWPROT,
+-        S_AXI_AWVALID   => S_AXI_AWVALID,
+-        S_AXI_AWREADY   => S_AXI_AWREADY,
+-        S_AXI_WDATA     => S_AXI_WDATA,
+-        S_AXI_WSTRB     => S_AXI_WSTRB,
+-        S_AXI_WVALID    => S_AXI_WVALID,
+-        S_AXI_WREADY    => S_AXI_WREADY,
+-        S_AXI_BRESP     => S_AXI_BRESP,
+-        S_AXI_BVALID    => S_AXI_BVALID,
+-        S_AXI_BREADY    => S_AXI_BREADY,
+-        S_AXI_ARADDR    => S_AXI_ARADDR,
+-        S_AXI_ARPROT    => S_AXI_ARPROT,
+-        S_AXI_ARVALID   => S_AXI_ARVALID,
+-        S_AXI_ARREADY   => S_AXI_ARREADY,
+-        S_AXI_RDATA     => S_AXI_RDATA,
+-        S_AXI_RRESP     => S_AXI_RRESP,
+-        S_AXI_RVALID    => S_AXI_RVALID,
+-        S_AXI_RREADY    => S_AXI_RREADY
++        S_AXI_ACLK => CLK, S_AXI_ARESETN => NRESET,
++        S_AXI_AWADDR => AWADDR, S_AXI_AWPROT => "000", S_AXI_AWVALID => AWVALID, S_AXI_AWREADY => AWREADY,
++        S_AXI_WDATA => WDATA, S_AXI_WSTRB => WSTRB, S_AXI_WVALID => WVALID, S_AXI_WREADY => WREADY,
++        S_AXI_BRESP => BRESP, S_AXI_BVALID => BVALID, S_AXI_BREADY => BREADY,
++        S_AXI_ARADDR => ARADDR, S_AXI_ARPROT => "000", S_AXI_ARVALID => ARVALID, S_AXI_ARREADY => ARREADY,
++        S_AXI_RDATA => RDATA, S_AXI_RRESP => RRESP, S_AXI_RVALID => RVALID, S_AXI_RREADY => RREADY,
++        SYNCHRONIZE => SYNCHRONIZE
+     );
+-    
+-    STIMULUS:
+-    process is
+-        procedure WRITE_PROCEDURE(
+-            constant ADDRESS : in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
+-            constant DATA    : in std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+-            constant STROBE  : in std_logic_vector(3 downto 0)
+-        ) is
++    SYNC_MONITOR : process(CLK)
++    begin
++        if rising_edge(CLK) then
++            if NRESET='0' then SYNC_COUNT <= 0;
++            elsif SYNCHRONIZE='1' then SYNC_COUNT <= SYNC_COUNT+1;
++                report "AXI_SYNC count=" & integer'image(SYNC_COUNT+1) severity NOTE; end if;
++        end if;
++    end process;
++    STIMULUS : process
++        procedure TICK(count : positive := 1) is
+         begin
+-            S_AXI_AWADDR <= ADDRESS;
+-            S_AXI_AWVALID <= '1';
+-            --wait until S_AXI_AWREADY = '1';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_AWVALID <= '0';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_WDATA <= DATA;
+-            S_AXI_WSTRB <= STROBE;
+-            S_AXI_WVALID <= '1';
+-            --wait until S_AXI_WREADY = '1';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_WVALID <= '0';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_BREADY <= '1';
+-            --wait until S_AXI_BVALID = '1';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_BREADY <= '0';
+-            wait until CLK='1' and CLK'event;
+-        end procedure WRITE_PROCEDURE;
+-        
+-        procedure READ_PROCEDURE(
+-            constant ADDRESS : in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0)
+-        ) is
++            for cycle in 1 to count loop wait until rising_edge(CLK); wait for 1 ns; end loop;
++        end procedure;
++        procedure ACCEPT(signal valid : in std_logic; signal ready : in std_logic) is
++            variable accepted : boolean := false;
+         begin
+-            S_AXI_ARADDR <= ADDRESS;
+-            S_AXI_ARVALID <= '1';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_ARVALID <= '0';
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_RREADY <= '1';
+-            wait until CLK='1' and CLK'event;
+-            wait until CLK='1' and CLK'event;
+-            wait until CLK='1' and CLK'event;
+-            wait until CLK='1' and CLK'event;
+-            wait until CLK='1' and CLK'event;
+-            S_AXI_RREADY <= '0';
+-            wait until CLK='1' and CLK'event;
+-        end procedure READ_PROCEDURE;
+-        
+-        variable INSTRUCTION : INSTRUCTION_TYPE;
+-    begin
+-        S_AXI_ARADDR <= (others => '0');
+-        S_AXI_AWPROT <= (others => '0');
+-        S_AXI_AWVALID <= '0';
+-        S_AXI_WDATA <= (others => '0');
+-        S_AXI_WSTRB <= (others => '0');
+-        S_AXI_WVALID <= '0';
+-        S_AXI_BREADY <= '0';
+-        S_AXI_ARADDR <= (others => '0');
+-        S_AXI_ARPROT <= (others => '0');
+-        S_AXI_ARVALID <= '0';
+-        S_AXI_RREADY <= '0';
+-        
+-        NRESET <= '0';
+-        wait until CLK='1' and CLK'event;
+-        NRESET <= '1';
+-        wait until CLK='1' and CLK'event;
+-        -- Weight buffer write test
+-        WRITE_PROCEDURE(x"00000", x"AFFEDEAD", "1111"); -- Base address
+-        WRITE_PROCEDURE(x"00004", x"DEADAFFE", "1111");
+-        WRITE_PROCEDURE(x"00008", x"12345678", "1111");
+-        WRITE_PROCEDURE(x"0000C", x"0000B00B", "1111");
+-        WRITE_PROCEDURE(x"00958", x"12345678", "1111");
+-        WRITE_PROCEDURE(x"7FFFC", x"0000B00B", "1111"); -- End address
+-        -- Unified buffer write test
+-        WRITE_PROCEDURE(x"80000", x"AFFEDEAD", "1111"); -- Base address
+-        WRITE_PROCEDURE(x"80004", x"DEADAFFE", "1111");
+-        WRITE_PROCEDURE(x"80008", x"12345678", "1111");
+-        WRITE_PROCEDURE(x"8000C", x"0000B00B", "1111");
+-        WRITE_PROCEDURE(x"80958", x"12345678", "1111");
+-        WRITE_PROCEDURE(x"8FFFC", x"0000B00B", "1111"); -- End address
+-        -- Instruction fifo write test
+-        WRITE_PROCEDURE(x"90000", x"AFFEDEAD", "1111"); -- Base address, shouldn't do anything
+-        
+-        INSTRUCTION.OP_CODE := "00001000"; -- load weight
+-        INSTRUCTION.CALC_LENGTH := std_logic_vector(to_unsigned(14, LENGTH_WIDTH));
+-        INSTRUCTION.BUFFER_ADDRESS := x"000000";
+-        INSTRUCTION.ACC_ADDRESS := x"0000";
+-        
+-        WRITE_PROCEDURE(x"90004", INSTRUCTION_TO_BITS(INSTRUCTION)(1*4*BYTE_WIDTH-1 downto 0*4*BYTE_WIDTH), "1111"); -- Write lower instruction word
+-        WRITE_PROCEDURE(x"90008", INSTRUCTION_TO_BITS(INSTRUCTION)(2*4*BYTE_WIDTH-1 downto 1*4*BYTE_WIDTH), "1111"); -- Write middle instruction word
+-        WRITE_PROCEDURE(x"9000C", x"0000" & INSTRUCTION_TO_BITS(INSTRUCTION)(2*4*BYTE_WIDTH + 2*BYTE_WIDTH-1 downto 2*4*BYTE_WIDTH), "1111"); -- Write upper instruction word
+-        
+-        -- Weight buffer read test - shouldn't do anything
+-        READ_PROCEDURE(x"00000");
+-        READ_PROCEDURE(x"00004");
+-        READ_PROCEDURE(x"00008");
+-        READ_PROCEDURE(x"0000C");
+-        READ_PROCEDURE(x"00958");
+-        READ_PROCEDURE(x"7FFFC");
+-        -- Unified buffer read test
+-        READ_PROCEDURE(x"80000");
+-        READ_PROCEDURE(x"80004");
+-        READ_PROCEDURE(x"80008");
+-        READ_PROCEDURE(x"8000C");
+-        READ_PROCEDURE(x"80958");
+-        READ_PROCEDURE(x"8FFFC");
+-        -- Instruction fifo read test
+-        READ_PROCEDURE(x"90000"); -- should be TPU max index
+-        READ_PROCEDURE(x"90004"); -- shouldn't do anything
+-        READ_PROCEDURE(x"90008"); -- shouldn't do anything
+-        READ_PROCEDURE(x"9000C"); -- shouldn't do anything
+-        wait;
+-    end process STIMULUS;
+-    
+-    CLOCK_GEN: 
+-    process
++            for cycle in 1 to 100 loop
++                wait until rising_edge(CLK);
++                if valid='1' and ready='1' then accepted:=true; exit; end if;
++            end loop;
++            assert accepted report "AXI handshake timeout" severity FAILURE;
++        end procedure;
++        procedure WRITE_WORD(address : natural; data : WORD_TYPE; strobe : std_logic_vector(3 downto 0) := "1111") is
++        begin
++            AWADDR <= std_logic_vector(to_unsigned(address,20)); AWVALID <= '1';
++            ACCEPT(AWVALID,AWREADY); AWVALID <= '0'; wait for 1 ns;
++            TICK(2); -- Independent address and data channels, delayed data.
++            WDATA <= data; WSTRB <= strobe; WVALID <= '1';
++            ACCEPT(WVALID,WREADY);
++            WVALID <= '0'; WDATA <= (others => '0'); WSTRB <= "0000";
++            wait for 1 ns; -- Master may change data/strobes immediately after W handshake.
++            ACCEPT(BVALID,ALWAYS_READY);
++            assert BRESP="00" report "AXI write response error" severity FAILURE;
++            wait for 1 ns;
++            TICK(2); -- Hold BREADY low, response must remain valid.
++            assert BVALID='1' and BRESP="00" report "AXI write response lost under backpressure" severity FAILURE;
++            BREADY <= '1'; TICK; BREADY <= '0'; TICK;
++        end procedure;
++        procedure READ_WORD(address : natural; variable data : out WORD_TYPE; backpressure : boolean := false) is
++            variable held : WORD_TYPE;
++        begin
++            ARADDR <= std_logic_vector(to_unsigned(address,20)); ARVALID <= '1';
++            if backpressure then RREADY <= '0'; else RREADY <= '1'; end if;
++            ACCEPT(ARVALID,ARREADY); ARVALID <= '0'; wait for 1 ns;
++            ACCEPT(RVALID,ALWAYS_READY); held := RDATA;
++            assert RRESP="00" report "AXI read response error" severity FAILURE;
++            if backpressure then
++                wait for 1 ns; TICK(3);
++                assert RVALID='1' and RDATA=held and RRESP="00"
++                    report "AXI read response not held under backpressure" severity FAILURE;
++                RREADY <= '1'; TICK;
++            else wait for 1 ns; end if;
++            data := held; RREADY <= '0'; TICK;
++        end procedure;
++        procedure PAIRED_ADDRESSES is
++        begin
++            -- A single-transaction slave must not acknowledge two requests
++            -- in one cycle and then discard one of them.
++            AWADDR <= x"80F10"; ARADDR <= x"80F00";
++            AWVALID <= '1'; ARVALID <= '1'; RREADY <= '1';
++            ACCEPT(AWVALID,AWREADY);
++            assert ARREADY='0' report "AXI accepted simultaneous addresses without queuing both" severity FAILURE;
++            AWVALID <= '0'; wait for 1 ns;
++            WDATA <= x"12345678"; WSTRB <= "1111"; WVALID <= '1';
++            ACCEPT(WVALID,WREADY); WVALID <= '0'; WDATA <= (others=>'0'); WSTRB <= "0000";
++            BREADY <= '1'; wait for 1 ns;
++            ACCEPT(BVALID,BREADY); BREADY <= '0'; wait for 1 ns;
++            ACCEPT(ARVALID,ARREADY); ARVALID <= '0'; wait for 1 ns;
++            ACCEPT(RVALID,RREADY);
++            assert RDATA=x"11BB33DD" and RRESP="00" report "AXI queued read lost after write arbitration" severity FAILURE;
++            RREADY <= '0'; wait for 1 ns; TICK;
++        end procedure;
++        procedure COMMAND(opcode : natural; length : natural; acc : natural := 0; buf : natural := 0) is
++            variable command_bits : std_logic_vector(79 downto 0);
++        begin
++            command_bits := INSTRUCTION_TO_BITS((
++                OP_CODE => std_logic_vector(to_unsigned(opcode,8)),
++                CALC_LENGTH => std_logic_vector(to_unsigned(length,32)),
++                ACC_ADDRESS => std_logic_vector(to_unsigned(acc,16)),
++                BUFFER_ADDRESS => std_logic_vector(to_unsigned(buf,24))));
++            WRITE_WORD(16#90004#,command_bits(31 downto 0));
++            WRITE_WORD(16#90008#,command_bits(63 downto 32));
++            WRITE_WORD(16#9000C#,x"0000" & command_bits(79 downto 64));
++        end procedure;
++        variable word, data : WORD_TYPE;
++        variable weight : integer;
++        variable expected : integer;
++        variable strobes : std_logic_vector(3 downto 0);
++        variable completed : boolean;
+     begin
+-        while not stop_the_clock loop
+-          CLK <= '0', '1' after clock_period / 2;
+-          wait for clock_period;
++        TICK(3); NRESET <= '1'; TICK;
++        -- A byte-mask regression must not depend on live WSTRB after acceptance.
++        WRITE_WORD(16#80F00#,x"11223344");
++        WRITE_WORD(16#80F00#,x"AABBCCDD","0101");
++        READ_WORD(16#80F00#,data);
++        assert data=x"11BB33DD" report "AXI byte strobe/data not captured at W handshake, got " & to_hstring(data) severity FAILURE;
++        READ_WORD(16#80F00#,data,true);
++        assert data=x"11BB33DD" report "AXI backpressure changed data" severity FAILURE;
++        PAIRED_ADDRESSES;
++        -- Fill all 14 input/weight vectors over the actual 32-bit bus.
++        for i in 0 to N-1 loop
++            for chunk in 0 to 3 loop
++                word := (others => '0'); strobes := (others => '0');
++                for byte in 0 to 3 loop
++                    if chunk*4+byte < N then
++                        if i=chunk*4+byte then weight:=64; else weight:=0; end if;
++                        word((byte+1)*8-1 downto byte*8) := std_logic_vector(to_signed(weight,8));
++                        strobes(byte):='1';
++                    end if;
++                end loop;
++                WRITE_WORD(i*16+chunk*4,word,strobes);
++                word := (others => '0');
++                for byte in 0 to 3 loop
++                    if chunk*4+byte<N then
++                        word((byte+1)*8-1 downto byte*8) := std_logic_vector(to_signed(4*(i-chunk*4-byte),8));
++                    end if;
++                end loop;
++                WRITE_WORD(16#80000#+i*16+chunk*4,word,strobes);
++            end loop;
++        end loop;
++        for pass in 1 to 2 loop
++            COMMAND(9,N);
++            if pass=1 then COMMAND(33,N); else COMMAND(35,N); end if;
++            COMMAND(145,N,0,pass*N); COMMAND(255,0);
++            completed:=false;
++            for cycle in 1 to 400 loop
++                TICK; if SYNC_COUNT>=pass then completed:=true; exit; end if;
++            end loop;
++            assert completed report "AXI TPU synchronize timeout" severity FAILURE;
++            for i in 0 to N-1 loop
++                for chunk in 0 to 3 loop
++                    READ_WORD(16#80000#+(pass*N+i)*16+chunk*4,data,chunk=0);
++                    for byte in 0 to 3 loop
++                        if chunk*4+byte<N then
++                            expected:=pass*(i-chunk*4-byte);
++                            if expected<0 then expected:=0; end if;
++                        else expected:=0; end if; -- Padding beyond 14 lanes reads zero.
++                        assert data((byte+1)*8-1 downto byte*8)=std_logic_vector(to_signed(expected,8))
++                            report "AXI TPU result mismatch pass=" & integer'image(pass)
++                            & " row=" & integer'image(i) & " lane=" & integer'image(chunk*4+byte)
++                            & " actual word=" & to_hstring(data) severity FAILURE;
++                    end loop;
++                end loop;
++            end loop;
++            READ_WORD(16#90000#,data,true);
++            assert unsigned(data)>0 report "AXI runtime counter not readable" severity FAILURE;
+         end loop;
++        report "AXI test successful: 392 output bytes plus 56 padding bytes; strobes, responses, address arbitration, signed ReLU, accumulation and synchronize" severity NOTE;
++        stop;
+         wait;
+-    end process CLOCK_GEN;
+-end architecture BEH;
+\ No newline at end of file
++    end process;
++    WATCHDOG : process
++    begin wait for 100 us; assert false report "AXI test watchdog" severity FAILURE; end process;
++end architecture;
+diff --git a/src/vhdl/AXI/tinyTPU_v1_0_S00_AXI.vhd b/src/vhdl/AXI/tinyTPU_v1_0_S00_AXI.vhd
+index 69e0425..62d7503 100644
+--- a/src/vhdl/AXI/tinyTPU_v1_0_S00_AXI.vhd
++++ b/src/vhdl/AXI/tinyTPU_v1_0_S00_AXI.vhd
+@@ -262,6 +262,7 @@ architecture arch_imp of tinyTPU_v1_0_S00_AXI is
+     signal READ_ADDRESS_ns  : std_logic_vector(C_S_AXI_ADDR_WIDTH-2-1 downto 0);
+     signal WRITE_DATA_EN    : std_logic;
+     signal WRITE_DATA_cs    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0) := (others => '0');
++    signal WRITE_STROBE_cs  : std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto 0) := (others => '0');
+     signal WRITE_DATA_ns    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
+     signal READ_DATA_EN     : std_logic;
+     signal READ_DATA_cs     : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0) := (others => '0');
+@@ -342,7 +343,9 @@ begin
+                 S_AXI_RRESP  <= "10"; -- Slave error
+                 -- Address ready
+                 S_AXI_AWREADY <= '1';
+-                S_AXI_ARREADY <= '1';
++                -- This slave services one transaction at a time. Give writes
++                -- priority, leaving a simultaneous read pending at the master.
++                S_AXI_ARREADY <= not S_AXI_AWVALID;
+                 -- Data ready
+                 S_AXI_WREADY  <= '0';
+                 -- Enable flags
+@@ -351,7 +354,7 @@ begin
+                 SLAVE_READ_EN <= '0';
+                 WRITE_DATA_EN <= '0';
+                 case AWVALID_ARVALID is
+-                    when "10" =>
++                    when "10" | "11" =>
+                         WRITE_ADDRESS_EN    <= '1';
+                         READ_ADDRESS_EN     <= '0';
+                         STATE_ns <= WRITE_ADDRESS;
+@@ -461,17 +464,9 @@ begin
+                 READ_ADDRESS_EN  <= '0';
+                 WRITE_DATA_EN <= '0';
+                 READ_DATA_EN <= '0';
+-                case S_AXI_RREADY is
+-                    when '0' =>
+-                        SLAVE_READ_EN <= '0';
+-                        STATE_ns <= READ_ADDRESS;
+-                    when '1' =>
+-                        SLAVE_READ_EN <= '1';
+-                        STATE_ns <= READ_DATA;
+-                    when others =>
+-                        SLAVE_READ_EN <= '0';
+-                        STATE_ns <= READ_ADDRESS;
+-                end case;
++                -- Produce a response independently of the master's RREADY.
++                SLAVE_READ_EN <= '1';
++                STATE_ns <= READ_DATA;
+             when READ_DATA =>
+                 -- Response
+                 S_AXI_BRESP <= "10"; -- Slave error
+@@ -518,7 +513,12 @@ begin
+                 WRITE_DATA_EN <= '0';
+                 READ_DATA_EN <= '0';
+                 SLAVE_READ_EN <= '0';
+-                STATE_ns <= IDLE;
++                -- Keep RVALID and the registered data until a read handshake.
++                if S_AXI_RREADY = '1' then
++                    STATE_ns <= IDLE;
++                else
++                    STATE_ns <= READ_RESPONSE;
++                end if;
+             when others =>
+                 -- Response
+                 S_AXI_BRESP <= "10"; -- Slave error
+@@ -566,7 +566,7 @@ begin
+     BUFFER_ENABLE_ON_WRITE <= BUFFER_ENABLE_ON_WRITE_REG1_cs;
+     
+     TPU_WRITE:
+-    process(SLAVE_WRITE_EN, WRITE_ADDRESS_cs, WRITE_DATA_cs, S_AXI_WSTRB, INSTRUCTION_FULL) is
++    process(SLAVE_WRITE_EN, WRITE_ADDRESS_cs, WRITE_DATA_cs, WRITE_STROBE_cs, INSTRUCTION_FULL) is
+         variable UPPER_WRITE_ADDRESS_v : std_logic_vector(ADDRESS_WIDTH-MATRIX_ADDRESS_WIDTH-1 downto 0);
+         variable LOWER_WRITE_ADDRESS_v : std_logic_vector(MATRIX_ADDRESS_WIDTH-1 downto 0);
+     begin
+@@ -596,7 +596,7 @@ begin
+                 
+                 for i in 0 to MATRIX_WIDTH-1 loop
+                         if i/4 = to_integer(unsigned(LOWER_WRITE_ADDRESS_v)) then
+-                            if S_AXI_WSTRB(i mod 4) = '1' then
++                            if WRITE_STROBE_cs(i mod 4) = '1' then
+                                 WEIGHT_WRITE_ENABLE_REG0_ns(i) <= '1';
+                             else
+                                 WEIGHT_WRITE_ENABLE_REG0_ns(i) <= '0';
+@@ -615,7 +615,7 @@ begin
+                 
+                 for i in 0 to MATRIX_WIDTH-1 loop
+                         if i/4 = to_integer(unsigned(LOWER_WRITE_ADDRESS_v)) then
+-                            if S_AXI_WSTRB(i mod 4) = '1' then
++                            if WRITE_STROBE_cs(i mod 4) = '1' then
+                                 BUFFER_WRITE_ENABLE_REG0_ns(i) <= '1';
+                             else
+                                 BUFFER_WRITE_ENABLE_REG0_ns(i) <= '0';
+@@ -732,6 +732,7 @@ begin
+                 WRITE_ADDRESS_cs    <= (others => '0');
+                 READ_ADDRESS_cs     <= (others => '0');
+                 WRITE_DATA_cs       <= (others => '0');
++                WRITE_STROBE_cs     <= (others => '0');
+                 READ_DATA_cs        <= (others => '0');
+                 UPPER_READ_ADDRESS_DELAY0_cs <= (others => '0');
+                 UPPER_READ_ADDRESS_DELAY1_cs <= (others => '0');
+@@ -766,6 +767,7 @@ begin
+                 
+                 if WRITE_DATA_EN = '1' then
+                     WRITE_DATA_cs <= WRITE_DATA_ns;
++                    WRITE_STROBE_cs <= S_AXI_WSTRB;
+                 end if;
+                 
+                 if READ_DATA_EN = '1' then
+diff --git a/src/vhdl/Instruction_FIFO/FIFO.vhdl b/src/vhdl/Instruction_FIFO/FIFO.vhdl
+index 0e27707..d0331a4 100644
+--- a/src/vhdl/Instruction_FIFO/FIFO.vhdl
++++ b/src/vhdl/Instruction_FIFO/FIFO.vhdl
+@@ -100,17 +100,14 @@ begin
+                     EMPTY_v := '0';
+                 end if;
+                     
+-                case SIZE_v is
+-                    when FIFO_DEPTH =>
+-                        EMPTY_v := '0';
+-                        FULL_v  := '1';
+-                    when 0 =>
+-                        EMPTY_v := '1';
+-                        FULL_v  := '0';
+-                    when others =>
+-                        EMPTY_v := EMPTY_v;
+-                        FULL_v  := FULL_v;
+-                end case;
++                -- Generics are not locally static case choices in VHDL.
++                if SIZE_v = FIFO_DEPTH then
++                    EMPTY_v := '0';
++                    FULL_v  := '1';
++                elsif SIZE_v = 0 then
++                    EMPTY_v := '1';
++                    FULL_v  := '0';
++                end if;
+                        
+             end if;
+         end if;
+@@ -246,4 +243,4 @@ begin
+             end if;
+         end if;
+     end process SEQ_LOG;
+-end architecture DIST_RAM_FIFO;
+\ No newline at end of file
++end architecture DIST_RAM_FIFO;
+diff --git a/src/vhdl/Instruction_FIFO/TB_FIFO.vhdl b/src/vhdl/Instruction_FIFO/TB_FIFO.vhdl
+index 165facc..c40d895 100644
+--- a/src/vhdl/Instruction_FIFO/TB_FIFO.vhdl
++++ b/src/vhdl/Instruction_FIFO/TB_FIFO.vhdl
+@@ -25,6 +25,7 @@ library IEEE;
+     use IEEE.numeric_std.all;
+     
+ entity TB_FIFO is
++    generic(USE_FF : boolean := false; TEST_DEPTH : positive := 32);
+ end entity TB_FIFO;
+ 
+ architecture BEH of TB_FIFO is
+@@ -45,10 +46,9 @@ architecture BEH of TB_FIFO is
+             FULL        : out std_logic
+         );
+     end component DUT;
+-    for all : DUT use entity WORK.FIFO(DIST_RAM_FIFO);
+     
+     constant FIFO_WIDTH : natural := 8;
+-    constant FIFO_DEPTH : natural := 32;
++    constant FIFO_DEPTH : natural := TEST_DEPTH;
+     
+     signal CLK, RESET   : std_logic;
+     signal INPUT        : std_logic_vector(FIFO_WIDTH-1 downto 0);
+@@ -62,6 +62,9 @@ architecture BEH of TB_FIFO is
+     constant clock_period   : time := 10 ns;
+     signal stop_the_clock   : boolean;
+ begin
++    FF_IMPL : if USE_FF generate
++        for all : DUT use entity WORK.FIFO(FF_FIFO);
++    begin
+     DUT_i : DUT
+     generic map(
+         FIFO_WIDTH  => FIFO_WIDTH,
+@@ -77,7 +80,28 @@ begin
+         EMPTY       => EMPTY,
+         FULL        => FULL
+     );
+-    
++    end generate;
++
++    RAM_IMPL : if not USE_FF generate
++        for all : DUT use entity WORK.FIFO(DIST_RAM_FIFO);
++    begin
++    DUT_i : DUT
++    generic map(
++        FIFO_WIDTH  => FIFO_WIDTH,
++        FIFO_DEPTH  => FIFO_DEPTH
++    )
++    port map(
++        CLK         => CLK,
++        RESET       => RESET,
++        INPUT       => INPUT,
++        WRITE_EN    => WRITE_EN,
++        OUTPUT      => OUTPUT,
++        NEXT_EN     => NEXT_EN,
++        EMPTY       => EMPTY,
++        FULL        => FULL
++    );
++    end generate;
++
+     STIMULUS:
+     process is
+     begin
+diff --git a/src/vhdl/Instruction_FIFO/TB_INSTRUCTION_FIFO.vhdl b/src/vhdl/Instruction_FIFO/TB_INSTRUCTION_FIFO.vhdl
+index f797878..af0ea53 100644
+--- a/src/vhdl/Instruction_FIFO/TB_INSTRUCTION_FIFO.vhdl
++++ b/src/vhdl/Instruction_FIFO/TB_INSTRUCTION_FIFO.vhdl
+@@ -150,7 +150,7 @@ begin
+         end if;
+         
+         report "Test was successful!" severity NOTE;
+-        --stop_the_clock <= true;
++        stop_the_clock <= true;
+         wait;
+     end process STIMULUS;
+     
+@@ -163,4 +163,4 @@ begin
+         end loop;
+         wait;
+     end process CLOCK_GEN;
+-end architecture BEH;
+\ No newline at end of file
++end architecture BEH;
+diff --git a/src/vhdl/Register_File/REGISTER_FILE.vhdl b/src/vhdl/Register_File/REGISTER_FILE.vhdl
+index a25f3ce..3dd20ba 100644
+--- a/src/vhdl/Register_File/REGISTER_FILE.vhdl
++++ b/src/vhdl/Register_File/REGISTER_FILE.vhdl
+@@ -214,6 +214,14 @@ begin
+                 if to_integer(unsigned(ACC_READ_ADDRESS)) < REGISTER_DEPTH then
+                 --synthesis translate_on
+                     ACC_READ_PORT <= BITS_TO_WORD_ARRAY(ACCUMULATORS(to_integer(unsigned(ACC_READ_ADDRESS))));
++                --synthesis translate_off
++                end if;
++                --synthesis translate_on
++                -- The accumulation read is an independent mirrored RAM port.
++                -- An idle/out-of-range activation address must not freeze it.
++                --synthesis translate_off
++                if to_integer(unsigned(ACC_ACCU_ADDRESS)) < REGISTER_DEPTH then
++                --synthesis translate_on
+                     ACC_ACCUMULATE_PORT <= BITS_TO_WORD_ARRAY(ACCUMULATORS_COPY(to_integer(unsigned(ACC_ACCU_ADDRESS))));
+                 --synthesis translate_off
+                 end if;
+@@ -293,4 +301,4 @@ begin
+             end if;
+         end if;
+     end process SEQ_LOG;
+-end architecture BEH;
+\ No newline at end of file
++end architecture BEH;
+diff --git a/src/vhdl/Register_File/TB_REGISTER_FILE.vhdl b/src/vhdl/Register_File/TB_REGISTER_FILE.vhdl
+index 74f4247..2f2bb83 100644
+--- a/src/vhdl/Register_File/TB_REGISTER_FILE.vhdl
++++ b/src/vhdl/Register_File/TB_REGISTER_FILE.vhdl
+@@ -82,13 +82,22 @@ begin
+     
+     STIMULUS:
+     process is
++        -- Six address/data registers followed by the synchronous RAM access.
++        -- Count enabled edges from acceptance, then allow delta cycles to settle.
++        procedure WAIT_PIPELINE is
++        begin
++            for cycle in 1 to 7 loop
++                wait until rising_edge(CLK);
++            end loop;
++            wait for 1 ns;
++        end procedure;
+     begin
+         stop_the_clock <= false;
+         RESET <= '0';
+         ENABLE <= '0';
+         WRITE_ADDRESS <= (others => '0');
+         WRITE_PORT <= (others => (others => '0'));
+-        WRITE_ENABLE <= '1';
++        WRITE_ENABLE <= '0';
+         ACCUMULATE <= '0';
+         READ_ADDRESS <= (others => '0');
+         wait until '1'=CLK and CLK'event;
+@@ -109,21 +118,26 @@ begin
+         end loop;
+         
+         WRITE_ENABLE <= '0';
++        WAIT_PIPELINE; -- Drain all writes before checking memory contents.
+         
+         for i in 0 to MATRIX_WIDTH-1 loop
+             READ_ADDRESS <= std_logic_vector(to_unsigned(i, 2*BYTE_WIDTH));
++            WAIT_PIPELINE;
+             for j in 0 to MATRIX_WIDTH-1 loop
+                 wait for 1 ns;
+                 if READ_PORT(j) /= std_logic_vector(to_unsigned(i, 4*BYTE_WIDTH)) then
+-                    report "Test failed at saving!" severity ERROR;
+-                    --stop_the_clock <= true;
+-                    --wait;
++                    report "Test failed at saving address " & integer'image(i)
++                        & " lane " & integer'image(j) severity FAILURE;
+                 end if;
+             end loop;
+             wait until '1'=CLK and CLK'event;
+         end loop;
+         
+         -- TEST - accumulate values
++        -- The independent read port may be idle/out of range while accumulating.
++        -- It must not prevent valid accumulation reads from the mirrored RAM.
++        READ_ADDRESS <= (others => '1');
++        WAIT_PIPELINE;
+         ACCUMULATE <= '1';
+         for i in 0 to MATRIX_WIDTH-1 loop
+             for j in 0 to MATRIX_WIDTH-1 loop
+@@ -132,26 +146,51 @@ begin
+             WRITE_ADDRESS <= std_logic_vector(to_unsigned(i, 2*BYTE_WIDTH));
+             WRITE_ENABLE <= '1';
+             wait until '1'=CLK and CLK'event;
+-            --WRITE_PORT <= (others => (others => '0')); -- accumulate 0 - register will count up on checking otherwise
+         end loop;
+         WRITE_ENABLE <= '0';
++        WAIT_PIPELINE;
+         
+         for i in 0 to MATRIX_WIDTH-1 loop
+             READ_ADDRESS <= std_logic_vector(to_unsigned(i, 2*BYTE_WIDTH));
++            WAIT_PIPELINE;
+             for j in 0 to MATRIX_WIDTH-1 loop
+                 wait for 1 ns;
+                 if READ_PORT(j) /= std_logic_vector(to_unsigned(i+j, 4*BYTE_WIDTH)) then
+-                    report "Test failed at accumulation!" severity ERROR;
+-                    --stop_the_clock <= true;
+-                    --wait;
++                    report "Test failed at accumulation address " & integer'image(i)
++                        & " lane " & integer'image(j) severity FAILURE;
+                 end if;
+             end loop;
+             wait until '1'=CLK and CLK'event;
+         end loop;
+                 
+-        report "Test was successful!" severity NOTE;
++        -- A write offered while disabled is not accepted. All pipelines hold.
++        ENABLE <= '0';
++        WRITE_ADDRESS <= (others => '0');
++        WRITE_ENABLE <= '1';
++        ACCUMULATE <= '0';
++        for j in 0 to MATRIX_WIDTH-1 loop
++            WRITE_PORT(j) <= std_logic_vector(to_unsigned(99+j, 4*BYTE_WIDTH));
++        end loop;
++        for cycle in 1 to 3 loop wait until rising_edge(CLK); end loop;
++        wait for 1 ns;
++        for j in 0 to MATRIX_WIDTH-1 loop
++            assert READ_PORT(j) = std_logic_vector(to_unsigned(MATRIX_WIDTH-1+j, 4*BYTE_WIDTH))
++                report "Register read changed while disabled" severity FAILURE;
++        end loop;
++        ENABLE <= '1';
++        wait until rising_edge(CLK);
++        WRITE_ENABLE <= '0';
++        WAIT_PIPELINE;
++        READ_ADDRESS <= (others => '0');
++        WAIT_PIPELINE;
++        for j in 0 to MATRIX_WIDTH-1 loop
++            assert READ_PORT(j) = std_logic_vector(to_unsigned(99+j, 4*BYTE_WIDTH))
++                report "Register resumed write/overwrite failed" severity FAILURE;
++        end loop;
++
++        report "Test was successful! 40 lane comparisons: overwrite, accumulation, independent read, stall and resume" severity NOTE;
+         
+-        --stop_the_clock <= true;
++        stop_the_clock <= true;
+         wait;
+     end process STIMULUS;
+     
+@@ -164,4 +203,4 @@ begin
+         end loop;
+         wait;
+     end process CLOCK_GEN;
+-end architecture BEH;
+\ No newline at end of file
++end architecture BEH;
+diff --git a/src/vhdl/TB_TPU.vhdl b/src/vhdl/TB_TPU.vhdl
+index 6fe3b8d..2f881a8 100644
+--- a/src/vhdl/TB_TPU.vhdl
++++ b/src/vhdl/TB_TPU.vhdl
+@@ -21,175 +21,148 @@
+ 
+ use WORK.TPU_pack.all;
+ library IEEE;
+-    use IEEE.std_logic_1164.all;
+-    use IEEE.numeric_std.all;
+-    
++use IEEE.std_logic_1164.all;
++use IEEE.numeric_std.all;
++use std.env.all;
++
+ entity TB_TPU is
+-end entity TB_TPU;
++end entity;
+ 
+ architecture BEH of TB_TPU is
+-    component DUT is
+-        generic(
+-            MATRIX_WIDTH            : natural := 14
+-        );  
+-        port(   
+-            CLK, RESET              : in  std_logic;
+-            ENABLE                  : in  std_logic;
+-            -- For data width check - 0 to 255 => width: 1 to 256
+-            TPU_MAX_INDEX           : out BYTE_TYPE;
+-            -- Splitted instruction input
+-            LOWER_INSTRUCTION_WORD  : in  WORD_TYPE;
+-            MIDDLE_INSTRUCTION_WORD : in  WORD_TYPE;
+-            UPPER_INSTRUCTION_WORD  : in  HALFWORD_TYPE;
+-            INSTRUCTION_WRITE_EN    : in  std_logic_vector(0 to 2);
+-            -- Instruction buffer flags for interrupts
+-            INSTRUCTION_EMPTY       : out std_logic;
+-            INSTRUCTION_FULL        : out std_logic;
+-        
+-            WEIGHT_WRITE_PORT       : in  BYTE_ARRAY_TYPE(0 to MATRIX_WIDTH-1);
+-            WEIGHT_ADDRESS          : in  WEIGHT_ADDRESS_TYPE;
+-            WEIGHT_ENABLE           : in  std_logic;
+-            WEIGHT_WRITE_ENABLE     : in  std_logic_vector(0 to MATRIX_WIDTH-1);
+-                
+-            BUFFER_WRITE_PORT       : in  BYTE_ARRAY_TYPE(0 to MATRIX_WIDTH-1);
+-            BUFFER_READ_PORT        : out BYTE_ARRAY_TYPE(0 to MATRIX_WIDTH-1);
+-            BUFFER_ADDRESS          : in  BUFFER_ADDRESS_TYPE;
+-            BUFFER_ENABLE           : in  std_logic;
+-            BUFFER_WRITE_ENABLE     : in  std_logic_vector(0 to MATRIX_WIDTH-1);
+-            -- Memory synchronization flag for interrupt 
+-            SYNCHRONIZE             : out std_logic
+-        );
+-    end component DUT;
+-    for all : DUT use entity WORK.TPU(BEH);
+-    
+-    constant MATRIX_WIDTH           : natural := 14;
+-    
+-    signal CLK                      : std_logic;
+-    signal RESET                    : std_logic;
+-    signal ENABLE                   : std_logic;
+-        
+-    signal TPU_MAX_INDEX            : BYTE_TYPE;
+-        
+-    signal LOWER_INSTRUCTION_WORD   : WORD_TYPE;
+-    signal MIDDLE_INSTRUCTION_WORD  : WORD_TYPE;
+-    signal UPPER_INSTRUCTION_WORD   : HALFWORD_TYPE;
+-    signal INSTRUCTION_WRITE_EN     : std_logic_vector(0 to 2);
+-        
+-    signal INSTRUCTION_EMPTY        : std_logic;
+-    signal INSTRUCTION_FULL         : std_logic;
+-        
+-    signal WEIGHT_WRITE_PORT        : BYTE_ARRAY_TYPE(0 to MATRIX_WIDTH-1);
+-    signal WEIGHT_ADDRESS           : WEIGHT_ADDRESS_TYPE;
+-    signal WEIGHT_ENABLE            : std_logic;
+-    signal WEIGHT_WRITE_ENABLE      : std_logic_vector(0 to MATRIX_WIDTH-1);
+-            
+-    signal BUFFER_WRITE_PORT        : BYTE_ARRAY_TYPE(0 to MATRIX_WIDTH-1);
+-    signal BUFFER_READ_PORT         : BYTE_ARRAY_TYPE(0 to MATRIX_WIDTH-1);
+-    signal BUFFER_ADDRESS           : BUFFER_ADDRESS_TYPE;
+-    signal BUFFER_ENABLE            : std_logic;
+-    signal BUFFER_WRITE_ENABLE      : std_logic_vector(0 to MATRIX_WIDTH-1);
+-        
+-    signal SYNCHRONIZE              : std_logic;
+-    
+-    -- for clock gen
+-    constant clock_period   : time := 10 ns;
+-    signal stop_the_clock   : boolean;
+-    
+-    
+-    signal INSTRUCTION : INSTRUCTION_TYPE;
++    constant N : natural := 14;
++    constant clock_period : time := 10 ns;
++    signal CLK : std_logic := '0';
++    signal RESET : std_logic := '1';
++    signal ENABLE : std_logic := '0';
++    signal RUNTIME_COUNT : WORD_TYPE;
++    signal INSTRUCTION : INSTRUCTION_TYPE := INIT_INSTRUCTION;
++    signal INSTRUCTION_BITS : std_logic_vector(INSTRUCTION_WIDTH-1 downto 0);
++    signal INSTRUCTION_WRITE_EN : std_logic_vector(0 to 2) := (others => '0');
++    signal INSTRUCTION_EMPTY, INSTRUCTION_FULL : std_logic;
++    signal WEIGHT_WRITE_PORT : BYTE_ARRAY_TYPE(0 to N-1) := (others => (others => '0'));
++    signal WEIGHT_ADDRESS : WEIGHT_ADDRESS_TYPE := (others => '0');
++    signal WEIGHT_ENABLE : std_logic := '0';
++    signal WEIGHT_WRITE_ENABLE : std_logic_vector(0 to N-1) := (others => '0');
++    signal BUFFER_WRITE_PORT : BYTE_ARRAY_TYPE(0 to N-1) := (others => (others => '0'));
++    signal BUFFER_READ_PORT : BYTE_ARRAY_TYPE(0 to N-1);
++    signal BUFFER_ADDRESS : BUFFER_ADDRESS_TYPE := (others => '0');
++    signal BUFFER_ENABLE : std_logic := '0';
++    signal BUFFER_WRITE_ENABLE : std_logic_vector(0 to N-1) := (others => '0');
++    signal SYNCHRONIZE : std_logic;
++    signal HOST_WEIGHT_BITS, HOST_INPUT_BITS, HOST_OUTPUT_BITS : std_logic_vector(N*BYTE_WIDTH-1 downto 0);
+ begin
+-    DUT_i : DUT
+-    generic map(
+-        MATRIX_WIDTH => MATRIX_WIDTH
+-    )
++    CLK <= not CLK after clock_period / 2;
++    HOST_WEIGHT_BITS <= BYTE_ARRAY_TO_BITS(WEIGHT_WRITE_PORT);
++    HOST_INPUT_BITS <= BYTE_ARRAY_TO_BITS(BUFFER_WRITE_PORT);
++    HOST_OUTPUT_BITS <= BYTE_ARRAY_TO_BITS(BUFFER_READ_PORT);
++    INSTRUCTION_BITS <= INSTRUCTION_TO_BITS(INSTRUCTION);
++    DUT_i : entity WORK.TPU(BEH)
++    generic map(MATRIX_WIDTH => N, WEIGHT_BUFFER_DEPTH => 32, UNIFIED_BUFFER_DEPTH => 64)
+     port map(
+-        CLK => CLK,
+-        RESET => RESET,
+-        ENABLE => ENABLE,
+-        TPU_MAX_INDEX => TPU_MAX_INDEX,
+-        LOWER_INSTRUCTION_WORD => LOWER_INSTRUCTION_WORD,
+-        MIDDLE_INSTRUCTION_WORD => MIDDLE_INSTRUCTION_WORD,
+-        UPPER_INSTRUCTION_WORD => UPPER_INSTRUCTION_WORD,
++        CLK => CLK, RESET => RESET, ENABLE => ENABLE,
++        RUNTIME_COUNT => RUNTIME_COUNT,
++        LOWER_INSTRUCTION_WORD => INSTRUCTION_BITS(31 downto 0),
++        MIDDLE_INSTRUCTION_WORD => INSTRUCTION_BITS(63 downto 32),
++        UPPER_INSTRUCTION_WORD => INSTRUCTION_BITS(79 downto 64),
+         INSTRUCTION_WRITE_EN => INSTRUCTION_WRITE_EN,
+-        INSTRUCTION_EMPTY => INSTRUCTION_EMPTY,
+-        INSTRUCTION_FULL => INSTRUCTION_FULL,
+-        WEIGHT_WRITE_PORT => WEIGHT_WRITE_PORT,
+-        WEIGHT_ADDRESS => WEIGHT_ADDRESS,
+-        WEIGHT_ENABLE => WEIGHT_ENABLE,
+-        WEIGHT_WRITE_ENABLE => WEIGHT_WRITE_ENABLE,
+-        BUFFER_WRITE_PORT => BUFFER_WRITE_PORT,
+-        BUFFER_READ_PORT => BUFFER_READ_PORT,
+-        BUFFER_ADDRESS => BUFFER_ADDRESS,
+-        BUFFER_ENABLE => BUFFER_ENABLE,
+-        BUFFER_WRITE_ENABLE => BUFFER_WRITE_ENABLE,
+-        SYNCHRONIZE => SYNCHRONIZE
++        INSTRUCTION_EMPTY => INSTRUCTION_EMPTY, INSTRUCTION_FULL => INSTRUCTION_FULL,
++        WEIGHT_WRITE_PORT => WEIGHT_WRITE_PORT, WEIGHT_ADDRESS => WEIGHT_ADDRESS,
++        WEIGHT_ENABLE => WEIGHT_ENABLE, WEIGHT_WRITE_ENABLE => WEIGHT_WRITE_ENABLE,
++        BUFFER_WRITE_PORT => BUFFER_WRITE_PORT, BUFFER_READ_PORT => BUFFER_READ_PORT,
++        BUFFER_ADDRESS => BUFFER_ADDRESS, BUFFER_ENABLE => BUFFER_ENABLE,
++        BUFFER_WRITE_ENABLE => BUFFER_WRITE_ENABLE, SYNCHRONIZE => SYNCHRONIZE
+     );
+-    
+-    LOWER_INSTRUCTION_WORD <= INSTRUCTION_TO_BITS(INSTRUCTION)(4*BYTE_WIDTH-1 downto 0);
+-    MIDDLE_INSTRUCTION_WORD <= INSTRUCTION_TO_BITS(INSTRUCTION)(2*4*BYTE_WIDTH-1 downto 4*BYTE_WIDTH);
+-    UPPER_INSTRUCTION_WORD <= INSTRUCTION_TO_BITS(INSTRUCTION)(2*4*BYTE_WIDTH+2*BYTE_WIDTH-1 downto 2*4*BYTE_WIDTH);
+-    
+-    STIMULUS:
+-    process is
+-    begin
+-        ENABLE <= '0';
+-        RESET <= '0';
+-        INSTRUCTION <= INIT_INSTRUCTION;
+-        INSTRUCTION_WRITE_EN <= (others => '0');
+-        WEIGHT_WRITE_PORT <= (others => (others => '0'));
+-        WEIGHT_ADDRESS <= (others => '0');
+-        WEIGHT_ENABLE <= '0';
+-        WEIGHT_WRITE_ENABLE <= (others => '0');
+-        BUFFER_WRITE_PORT <= (others => (others => '0'));
+-        BUFFER_ADDRESS <= (others => '0');
+-        BUFFER_ENABLE <= '0';
+-        BUFFER_WRITE_ENABLE <= (others => '0');
+-        
+-        wait until '1'=CLK and CLK'event;
+-        RESET <= '1';
+-        wait until '1'=CLK and CLK'event;
+-        RESET <= '0';
+-        wait until '1'=CLK and CLK'event;
+-        ENABLE <= '1';
+-        INSTRUCTION.OP_CODE <= "00001000"; -- load weight
+-        INSTRUCTION.CALC_LENGTH <= std_logic_vector(to_unsigned(14, LENGTH_WIDTH));
+-        INSTRUCTION.BUFFER_ADDRESS <= x"000000";
+-        INSTRUCTION.ACC_ADDRESS <= x"0000";
+-        
+-        INSTRUCTION_WRITE_EN <= (others => '1');
+-        wait until '1'=CLK and CLK'event;
+-        INSTRUCTION.OP_CODE <= "00100000"; -- matrix multiply
+-        INSTRUCTION.CALC_LENGTH <= std_logic_vector(to_unsigned(14, LENGTH_WIDTH));
+-        INSTRUCTION.BUFFER_ADDRESS <= x"000000";
+-        INSTRUCTION.ACC_ADDRESS <= x"0000";
+-        
+-        INSTRUCTION_WRITE_EN <= (others => '1');
+-        wait until '1'=CLK and CLK'event;
+-        INSTRUCTION.OP_CODE <= "10001001"; -- unsigned sigmoid activation
+-        INSTRUCTION.CALC_LENGTH <= std_logic_vector(to_unsigned(14, LENGTH_WIDTH));
+-        INSTRUCTION.BUFFER_ADDRESS <= x"00000E"; -- store to address 14 and up
+-        INSTRUCTION.ACC_ADDRESS <= x"0000";
+-        
+-        INSTRUCTION_WRITE_EN <= (others => '1');
+-        wait until '1'=CLK and CLK'event;
+-        INSTRUCTION.OP_CODE <= "11111111"; -- synchronize
+-        INSTRUCTION.CALC_LENGTH <= x"00000000";
+-        INSTRUCTION.BUFFER_ADDRESS <= x"000000";
+-        INSTRUCTION.ACC_ADDRESS <= x"0000";
+-        
+-        INSTRUCTION_WRITE_EN <= (others => '1');
+-        wait until '1'=CLK and CLK'event;
+-        INSTRUCTION_WRITE_EN <= (others => '0');
+-        wait;
+-    end process STIMULUS;
+-    
+-    CLOCK_GEN: 
+-    process
++    STIMULUS : process
++        procedure TICK(count : positive := 1) is
++        begin
++            for cycle in 1 to count loop
++                wait until rising_edge(CLK);
++                wait for 1 ns;
++            end loop;
++        end procedure;
++        procedure COMMAND(opcode : natural; length : natural; acc : natural := 0; buf : natural := 0) is
++        begin
++            assert INSTRUCTION_FULL = '0' report "Instruction FIFO full" severity FAILURE;
++            INSTRUCTION <= (
++                OP_CODE => std_logic_vector(to_unsigned(opcode, OP_CODE_WIDTH)),
++                CALC_LENGTH => std_logic_vector(to_unsigned(length, LENGTH_WIDTH)),
++                ACC_ADDRESS => std_logic_vector(to_unsigned(acc, ACCUMULATOR_ADDRESS_WIDTH)),
++                BUFFER_ADDRESS => std_logic_vector(to_unsigned(buf, BUFFER_ADDRESS_WIDTH))
++            );
++            INSTRUCTION_WRITE_EN <= (others => '1');
++            TICK;
++            INSTRUCTION_WRITE_EN <= (others => '0');
++            TICK;
++        end procedure;
++        procedure WAIT_SYNC is
++            variable seen : boolean := false;
++        begin
++            for cycle in 1 to 400 loop
++                TICK;
++                if SYNCHRONIZE = '1' then seen := true; exit; end if;
++            end loop;
++            assert seen report "TPU synchronize timeout" severity FAILURE;
++            report "SYSTEM_SYNC runtime=" & integer'image(to_integer(unsigned(RUNTIME_COUNT))) severity NOTE;
++            assert unsigned(RUNTIME_COUNT) > 0 report "Runtime counter did not run" severity FAILURE;
++            TICK(2);
++            assert INSTRUCTION_EMPTY = '1' report "Instructions not drained" severity FAILURE;
++        end procedure;
++        variable expected : integer;
+     begin
+-        while not stop_the_clock loop
+-          CLK <= '0', '1' after clock_period / 2;
+-          wait for clock_period;
++        TICK(2);
++        RESET <= '0'; ENABLE <= '1';
++        TICK;
++        -- Signed inputs A[i,j] = 4*(i-j), weights W = 64*identity.
++        -- Raw point products are multiples of 256, so ReLU's /256 rounding
++        -- has an independent exact integer reference (no LUT approximation).
++        WEIGHT_ENABLE <= '1'; WEIGHT_WRITE_ENABLE <= (others => '1');
++        BUFFER_ENABLE <= '1'; BUFFER_WRITE_ENABLE <= (others => '1');
++        for i in 0 to N-1 loop
++            WEIGHT_ADDRESS <= std_logic_vector(to_unsigned(i, WEIGHT_ADDRESS_WIDTH));
++            BUFFER_ADDRESS <= std_logic_vector(to_unsigned(i, BUFFER_ADDRESS_WIDTH));
++            for j in 0 to N-1 loop
++                if i=j then WEIGHT_WRITE_PORT(j) <= x"40";
++                else WEIGHT_WRITE_PORT(j) <= x"00"; end if;
++                BUFFER_WRITE_PORT(j) <= std_logic_vector(to_signed(4*(i-j), BYTE_WIDTH));
++            end loop;
++            TICK;
+         end loop;
++        WEIGHT_ENABLE <= '0'; WEIGHT_WRITE_ENABLE <= (others => '0');
++        BUFFER_ENABLE <= '0'; BUFFER_WRITE_ENABLE <= (others => '0');
++        TICK;
++        for pass in 1 to 2 loop
++            COMMAND(9, N); -- signed weight load, base 0
++            if pass=1 then COMMAND(33, N); -- overwrite
++            else COMMAND(35, N); end if; -- add second point product
++            COMMAND(145, N, 0, pass*N); -- signed ReLU, distinct output buffers
++            COMMAND(255, 0);
++            WAIT_SYNC;
++            BUFFER_ENABLE <= '1';
++            for i in 0 to N-1 loop
++                BUFFER_ADDRESS <= std_logic_vector(to_unsigned(pass*N+i, BUFFER_ADDRESS_WIDTH));
++                TICK(3); -- synchronous RAM plus two host-read registers
++                for j in 0 to N-1 loop
++                    expected := pass*(i-j);
++                    if expected < 0 then expected := 0; end if;
++                    assert BUFFER_READ_PORT(j) = std_logic_vector(to_signed(expected, BYTE_WIDTH))
++                        report "TPU result mismatch pass=" & integer'image(pass)
++                        & " row=" & integer'image(i) & " lane=" & integer'image(j)
++                        & " expected=" & integer'image(expected)
++                        & " actual=" & to_hstring(BUFFER_READ_PORT(j)) severity FAILURE;
++                end loop;
++                report "SYSTEM_RESULT pass=" & integer'image(pass) & " row=" & integer'image(i)
++                    & " data=" & to_hstring(BYTE_ARRAY_TO_BITS(BUFFER_READ_PORT)) severity NOTE;
++            end loop;
++            BUFFER_ENABLE <= '0';
++            TICK;
++        end loop;
++        report "TPU test successful: 392 output bytes checked; overwrite, accumulation, signed ReLU and synchronize" severity NOTE;
++        stop;
+         wait;
+-    end process CLOCK_GEN;
+-end architecture BEH;
+\ No newline at end of file
++    end process;
++    WATCHDOG : process
++    begin
++        wait for 30 us;
++        assert false report "TPU test watchdog" severity FAILURE;
++    end process;
++end architecture;

@@ -25,6 +25,7 @@ library IEEE;
     use IEEE.numeric_std.all;
     
 entity TB_FIFO is
+    generic(USE_FF : boolean := false; TEST_DEPTH : positive := 32);
 end entity TB_FIFO;
 
 architecture BEH of TB_FIFO is
@@ -45,10 +46,9 @@ architecture BEH of TB_FIFO is
             FULL        : out std_logic
         );
     end component DUT;
-    for all : DUT use entity WORK.FIFO(DIST_RAM_FIFO);
     
     constant FIFO_WIDTH : natural := 8;
-    constant FIFO_DEPTH : natural := 32;
+    constant FIFO_DEPTH : natural := TEST_DEPTH;
     
     signal CLK, RESET   : std_logic;
     signal INPUT        : std_logic_vector(FIFO_WIDTH-1 downto 0);
@@ -62,6 +62,9 @@ architecture BEH of TB_FIFO is
     constant clock_period   : time := 10 ns;
     signal stop_the_clock   : boolean;
 begin
+    FF_IMPL : if USE_FF generate
+        for all : DUT use entity WORK.FIFO(FF_FIFO);
+    begin
     DUT_i : DUT
     generic map(
         FIFO_WIDTH  => FIFO_WIDTH,
@@ -77,7 +80,28 @@ begin
         EMPTY       => EMPTY,
         FULL        => FULL
     );
-    
+    end generate;
+
+    RAM_IMPL : if not USE_FF generate
+        for all : DUT use entity WORK.FIFO(DIST_RAM_FIFO);
+    begin
+    DUT_i : DUT
+    generic map(
+        FIFO_WIDTH  => FIFO_WIDTH,
+        FIFO_DEPTH  => FIFO_DEPTH
+    )
+    port map(
+        CLK         => CLK,
+        RESET       => RESET,
+        INPUT       => INPUT,
+        WRITE_EN    => WRITE_EN,
+        OUTPUT      => OUTPUT,
+        NEXT_EN     => NEXT_EN,
+        EMPTY       => EMPTY,
+        FULL        => FULL
+    );
+    end generate;
+
     STIMULUS:
     process is
     begin

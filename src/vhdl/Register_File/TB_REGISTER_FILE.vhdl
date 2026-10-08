@@ -82,13 +82,22 @@ begin
     
     STIMULUS:
     process is
+        -- Six address/data registers followed by the synchronous RAM access.
+        -- Count enabled edges from acceptance, then allow delta cycles to settle.
+        procedure WAIT_PIPELINE is
+        begin
+            for cycle in 1 to 7 loop
+                wait until rising_edge(CLK);
+            end loop;
+            wait for 1 ns;
+        end procedure;
     begin
         stop_the_clock <= false;
         RESET <= '0';
         ENABLE <= '0';
         WRITE_ADDRESS <= (others => '0');
         WRITE_PORT <= (others => (others => '0'));
-        WRITE_ENABLE <= '1';
+        WRITE_ENABLE <= '0';
         ACCUMULATE <= '0';
         READ_ADDRESS <= (others => '0');
         wait until '1'=CLK and CLK'event;
@@ -109,21 +118,26 @@ begin
         end loop;
         
         WRITE_ENABLE <= '0';
+        WAIT_PIPELINE; -- Drain all writes before checking memory contents.
         
         for i in 0 to MATRIX_WIDTH-1 loop
             READ_ADDRESS <= std_logic_vector(to_unsigned(i, 2*BYTE_WIDTH));
+            WAIT_PIPELINE;
             for j in 0 to MATRIX_WIDTH-1 loop
                 wait for 1 ns;
                 if READ_PORT(j) /= std_logic_vector(to_unsigned(i, 4*BYTE_WIDTH)) then
-                    report "Test failed at saving!" severity ERROR;
-                    --stop_the_clock <= true;
-                    --wait;
+                    report "Test failed at saving address " & integer'image(i)
+                        & " lane " & integer'image(j) severity FAILURE;
                 end if;
             end loop;
             wait until '1'=CLK and CLK'event;
         end loop;
         
         -- TEST - accumulate values
+        -- The independent read port may be idle/out of range while accumulating.
+        -- It must not prevent valid accumulation reads from the mirrored RAM.
+        READ_ADDRESS <= (others => '1');
+        WAIT_PIPELINE;
         ACCUMULATE <= '1';
         for i in 0 to MATRIX_WIDTH-1 loop
             for j in 0 to MATRIX_WIDTH-1 loop
@@ -132,26 +146,51 @@ begin
             WRITE_ADDRESS <= std_logic_vector(to_unsigned(i, 2*BYTE_WIDTH));
             WRITE_ENABLE <= '1';
             wait until '1'=CLK and CLK'event;
-            --WRITE_PORT <= (others => (others => '0')); -- accumulate 0 - register will count up on checking otherwise
         end loop;
         WRITE_ENABLE <= '0';
+        WAIT_PIPELINE;
         
         for i in 0 to MATRIX_WIDTH-1 loop
             READ_ADDRESS <= std_logic_vector(to_unsigned(i, 2*BYTE_WIDTH));
+            WAIT_PIPELINE;
             for j in 0 to MATRIX_WIDTH-1 loop
                 wait for 1 ns;
                 if READ_PORT(j) /= std_logic_vector(to_unsigned(i+j, 4*BYTE_WIDTH)) then
-                    report "Test failed at accumulation!" severity ERROR;
-                    --stop_the_clock <= true;
-                    --wait;
+                    report "Test failed at accumulation address " & integer'image(i)
+                        & " lane " & integer'image(j) severity FAILURE;
                 end if;
             end loop;
             wait until '1'=CLK and CLK'event;
         end loop;
                 
-        report "Test was successful!" severity NOTE;
+        -- A write offered while disabled is not accepted. All pipelines hold.
+        ENABLE <= '0';
+        WRITE_ADDRESS <= (others => '0');
+        WRITE_ENABLE <= '1';
+        ACCUMULATE <= '0';
+        for j in 0 to MATRIX_WIDTH-1 loop
+            WRITE_PORT(j) <= std_logic_vector(to_unsigned(99+j, 4*BYTE_WIDTH));
+        end loop;
+        for cycle in 1 to 3 loop wait until rising_edge(CLK); end loop;
+        wait for 1 ns;
+        for j in 0 to MATRIX_WIDTH-1 loop
+            assert READ_PORT(j) = std_logic_vector(to_unsigned(MATRIX_WIDTH-1+j, 4*BYTE_WIDTH))
+                report "Register read changed while disabled" severity FAILURE;
+        end loop;
+        ENABLE <= '1';
+        wait until rising_edge(CLK);
+        WRITE_ENABLE <= '0';
+        WAIT_PIPELINE;
+        READ_ADDRESS <= (others => '0');
+        WAIT_PIPELINE;
+        for j in 0 to MATRIX_WIDTH-1 loop
+            assert READ_PORT(j) = std_logic_vector(to_unsigned(99+j, 4*BYTE_WIDTH))
+                report "Register resumed write/overwrite failed" severity FAILURE;
+        end loop;
+
+        report "Test was successful! 40 lane comparisons: overwrite, accumulation, independent read, stall and resume" severity NOTE;
         
-        --stop_the_clock <= true;
+        stop_the_clock <= true;
         wait;
     end process STIMULUS;
     

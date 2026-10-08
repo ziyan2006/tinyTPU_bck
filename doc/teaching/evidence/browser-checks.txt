@@ -1,0 +1,1 @@
+PASS: desktop and 390px mobile; 38 MMU and 252 system sample renders; 32 MMU and 392 system result comparisons; step/clock/play; actual 8-command system program; source dialog; waveform seeking; CSV/SVG/JSON/VCD export; BigInt encoding and range validation; zero JS errors; zero network requests.

@@ -100,17 +100,14 @@ begin
                     EMPTY_v := '0';
                 end if;
                     
-                case SIZE_v is
-                    when FIFO_DEPTH =>
-                        EMPTY_v := '0';
-                        FULL_v  := '1';
-                    when 0 =>
-                        EMPTY_v := '1';
-                        FULL_v  := '0';
-                    when others =>
-                        EMPTY_v := EMPTY_v;
-                        FULL_v  := FULL_v;
-                end case;
+                -- Generics are not locally static case choices in VHDL.
+                if SIZE_v = FIFO_DEPTH then
+                    EMPTY_v := '0';
+                    FULL_v  := '1';
+                elsif SIZE_v = 0 then
+                    EMPTY_v := '1';
+                    FULL_v  := '0';
+                end if;
                        
             end if;
         end if;

@@ -1,0 +1,4 @@
+$ /workspace/tinytpu-env/bin/ghdl -r --std=08 -frelaxed-rules TB_FIFO -gTEST_DEPTH=3 --assert-level=error
+/workspace/tinyTPU_bck/src/vhdl/Instruction_FIFO/TB_FIFO.vhdl:225:9:@166ns:(report note): Test was successful!
+
+exit_status=0

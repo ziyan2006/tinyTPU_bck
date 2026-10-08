@@ -262,6 +262,7 @@ architecture arch_imp of tinyTPU_v1_0_S00_AXI is
     signal READ_ADDRESS_ns  : std_logic_vector(C_S_AXI_ADDR_WIDTH-2-1 downto 0);
     signal WRITE_DATA_EN    : std_logic;
     signal WRITE_DATA_cs    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0) := (others => '0');
+    signal WRITE_STROBE_cs  : std_logic_vector((C_S_AXI_DATA_WIDTH/8)-1 downto 0) := (others => '0');
     signal WRITE_DATA_ns    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal READ_DATA_EN     : std_logic;
     signal READ_DATA_cs     : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0) := (others => '0');
@@ -342,7 +343,9 @@ begin
                 S_AXI_RRESP  <= "10"; -- Slave error
                 -- Address ready
                 S_AXI_AWREADY <= '1';
-                S_AXI_ARREADY <= '1';
+                -- This slave services one transaction at a time. Give writes
+                -- priority, leaving a simultaneous read pending at the master.
+                S_AXI_ARREADY <= not S_AXI_AWVALID;
                 -- Data ready
                 S_AXI_WREADY  <= '0';
                 -- Enable flags
@@ -351,7 +354,7 @@ begin
                 SLAVE_READ_EN <= '0';
                 WRITE_DATA_EN <= '0';
                 case AWVALID_ARVALID is
-                    when "10" =>
+                    when "10" | "11" =>
                         WRITE_ADDRESS_EN    <= '1';
                         READ_ADDRESS_EN     <= '0';
                         STATE_ns <= WRITE_ADDRESS;
@@ -461,17 +464,9 @@ begin
                 READ_ADDRESS_EN  <= '0';
                 WRITE_DATA_EN <= '0';
                 READ_DATA_EN <= '0';
-                case S_AXI_RREADY is
-                    when '0' =>
-                        SLAVE_READ_EN <= '0';
-                        STATE_ns <= READ_ADDRESS;
-                    when '1' =>
-                        SLAVE_READ_EN <= '1';
-                        STATE_ns <= READ_DATA;
-                    when others =>
-                        SLAVE_READ_EN <= '0';
-                        STATE_ns <= READ_ADDRESS;
-                end case;
+                -- Produce a response independently of the master's RREADY.
+                SLAVE_READ_EN <= '1';
+                STATE_ns <= READ_DATA;
             when READ_DATA =>
                 -- Response
                 S_AXI_BRESP <= "10"; -- Slave error
@@ -518,7 +513,12 @@ begin
                 WRITE_DATA_EN <= '0';
                 READ_DATA_EN <= '0';
                 SLAVE_READ_EN <= '0';
-                STATE_ns <= IDLE;
+                -- Keep RVALID and the registered data until a read handshake.
+                if S_AXI_RREADY = '1' then
+                    STATE_ns <= IDLE;
+                else
+                    STATE_ns <= READ_RESPONSE;
+                end if;
             when others =>
                 -- Response
                 S_AXI_BRESP <= "10"; -- Slave error
@@ -566,7 +566,7 @@ begin
     BUFFER_ENABLE_ON_WRITE <= BUFFER_ENABLE_ON_WRITE_REG1_cs;
     
     TPU_WRITE:
-    process(SLAVE_WRITE_EN, WRITE_ADDRESS_cs, WRITE_DATA_cs, S_AXI_WSTRB, INSTRUCTION_FULL) is
+    process(SLAVE_WRITE_EN, WRITE_ADDRESS_cs, WRITE_DATA_cs, WRITE_STROBE_cs, INSTRUCTION_FULL) is
         variable UPPER_WRITE_ADDRESS_v : std_logic_vector(ADDRESS_WIDTH-MATRIX_ADDRESS_WIDTH-1 downto 0);
         variable LOWER_WRITE_ADDRESS_v : std_logic_vector(MATRIX_ADDRESS_WIDTH-1 downto 0);
     begin
@@ -596,7 +596,7 @@ begin
                 
                 for i in 0 to MATRIX_WIDTH-1 loop
                         if i/4 = to_integer(unsigned(LOWER_WRITE_ADDRESS_v)) then
-                            if S_AXI_WSTRB(i mod 4) = '1' then
+                            if WRITE_STROBE_cs(i mod 4) = '1' then
                                 WEIGHT_WRITE_ENABLE_REG0_ns(i) <= '1';
                             else
                                 WEIGHT_WRITE_ENABLE_REG0_ns(i) <= '0';
@@ -615,7 +615,7 @@ begin
                 
                 for i in 0 to MATRIX_WIDTH-1 loop
                         if i/4 = to_integer(unsigned(LOWER_WRITE_ADDRESS_v)) then
-                            if S_AXI_WSTRB(i mod 4) = '1' then
+                            if WRITE_STROBE_cs(i mod 4) = '1' then
                                 BUFFER_WRITE_ENABLE_REG0_ns(i) <= '1';
                             else
                                 BUFFER_WRITE_ENABLE_REG0_ns(i) <= '0';
@@ -732,6 +732,7 @@ begin
                 WRITE_ADDRESS_cs    <= (others => '0');
                 READ_ADDRESS_cs     <= (others => '0');
                 WRITE_DATA_cs       <= (others => '0');
+                WRITE_STROBE_cs     <= (others => '0');
                 READ_DATA_cs        <= (others => '0');
                 UPPER_READ_ADDRESS_DELAY0_cs <= (others => '0');
                 UPPER_READ_ADDRESS_DELAY1_cs <= (others => '0');
@@ -766,6 +767,7 @@ begin
                 
                 if WRITE_DATA_EN = '1' then
                     WRITE_DATA_cs <= WRITE_DATA_ns;
+                    WRITE_STROBE_cs <= S_AXI_WSTRB;
                 end if;
                 
                 if READ_DATA_EN = '1' then

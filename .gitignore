@@ -48,3 +48,9 @@ VIVADO/
 # include CSV files
 !src/CSV/*.csv
 !src/CSV/*.m
+
+# Offline teaching page, its source and reproducible simulation evidence
+!doc/teaching/**
+doc/teaching/build/
+doc/teaching/__pycache__/
+doc/teaching/.browser-output/

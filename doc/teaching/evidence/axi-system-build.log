@@ -1,0 +1,18 @@
+$ /workspace/tinytpu-env/bin/ghdl -m --std=08 -frelaxed-rules TB_tinyTPU_v1_0_S00_AXI
+/workspace/tinyTPU_bck/src/vhdl/Weight_Buffer/WEIGHT_BUFFER.vhdl:75:21:warning: type of a shared variable must be a protected type [-Wshared]
+    shared variable RAM  : RAM_TYPE
+                    ^
+/workspace/tinyTPU_bck/src/vhdl/Unified_Buffer/UNIFIED_BUFFER.vhdl:86:21:warning: type of a shared variable must be a protected type [-Wshared]
+    shared variable RAM  : RAM_TYPE
+                    ^
+/workspace/tinyTPU_bck/src/vhdl/MMU/MATRIX_MULTIPLY_UNIT.vhdl:77:5:warning: component specification applies to no instance [-Wspecs]
+    for all : MACC use entity WORK.MACC(BEH);
+    ^
+/workspace/tinyTPU_bck/src/vhdl/Register_File/REGISTER_FILE.vhdl:55:21:warning: type of a shared variable must be a protected type [-Wshared]
+    shared variable ACCUMULATORS        : ACCUMULATOR_TYPE;
+                    ^
+/workspace/tinyTPU_bck/src/vhdl/Register_File/REGISTER_FILE.vhdl:56:21:warning: type of a shared variable must be a protected type [-Wshared]
+    shared variable ACCUMULATORS_COPY   : ACCUMULATOR_TYPE;
+                    ^
+
+exit_status=0

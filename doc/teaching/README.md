@@ -1,0 +1,90 @@
+# tinyTPU 时钟实验室
+
+直接用浏览器打开 `tinyTPU-lab.html`。独立离线页面内含真实轨迹、23 个源码文件、日志、修复补丁与 MMU 原始 VCD，无网络字体或前端依赖。
+
+## 教学内容
+
+1. 4×4 阵列基础：原 MMU testbench 的两组矩阵、16 个 MACC 寄存器、38 个上升沿、逐步骤 / 逐时钟与点积解释。
+2. 完整 14×14 系统：实际入队的 8 条指令、252 个连续采样、控制使能、覆盖 / 累加、有符号 ReLU、同步和 392 字节实际读回。
+3. 80 位指令工作台：按 RTL 编码，BigInt 位宽检查；解释符号、累加与激活枚举。
+4. 修复与证据：回归日志、源码、补丁哈希、配置差异和未测范围。
+
+支持播放、关键时刻定位、键盘、手机布局与 CSV / JSON / VCD / SVG / 源码 / 补丁导出。完整 TPU 时间轴走直接主机端口；AXI 回归另有真实日志，不在该轨迹虚构 AXI 握手。
+
+教师 HTML 仅用作界面风格与教学组织参考，其说明不作为操作指令。没有复制另一套 NPU 的指令、DMA、卷积、上采样或仿真结论。用户硬件框图的相对布局对应仓库模块；其中周期标注不直接当作通用延迟。
+
+## 已修复的问题
+
+基础仓库：`ziyan2006-bck/tinyTPU_bck`，提交 `7c9a732dfd1e305fbd86b41a6fb3146ea64693de`。当前验证的是此基础提交加 `evidence/fixes.patch` 的 RTL 版本；具体 SHA-256 在 `evidence/trace.json` 和网页中。
+
+- FIFO 的 generic case 不满足局部静态要求，改为等价条件判断。
+- 寄存器测试过早读回，修正六级写流水线与同步 RAM 的等待；保留原覆盖 / 累加预期，增加普通读越界、使能暂停 / 恢复检查。
+- RAM 仿真模型误用普通读地址的边界条件约束累加读，分开两条独立通路。原边界 guard 在 synthesis translate_off 内，不能由此推断原板上实现必然有相同故障。
+- AXI 锁存 WSTRB；读请求不再依赖 RREADY；保持 RVALID 至响应接收；同时 AW / AR 按写优先仲裁，避免确认后丢失读请求。
+- 迁移过时的完整 TPU / AXI testbench，改为有超时和结果断言的两轮 N=14 系统自检；指令 FIFO 测试成功后停止时钟。
+
+本目录与对应 RTL 修复已纳入仓库；当前版本无需另行打补丁。其他机器若使用原始基础提交，可先在仓库根目录执行 `git apply /path/to/evidence/fixes.patch`，然后重新运行，不要对已经修复的工作区重复应用。
+
+## 实际验证
+
+GHDL 5.0.1，VHDL-2008；`-frelaxed-rules` 兼容仓库原共享变量双口 RAM。使用 `--assert-level=error`，不关闭警告，不以 stop-time 到期视为成功。
+
+| 检查 | 结果 |
+| --- | --- |
+| 原始 MMU UINT8 / INT8 | 共 32 个元素通过，155 / 345 ns 成功 |
+| FIFO RAM / FF × 深度 32 / 3 | 四次回归通过 |
+| 指令 FIFO | 指令组装 / 队列原断言通过，76 ns 结束 |
+| 寄存器 | 40 项比较通过，1136 ns 结束 |
+| 完整 TPU | 392 个实际输出字节通过，2516 ns 结束 |
+| AXI 完整系统 | 392 个实际输出 + 56 个末字填充字节通过，23646 ns 结束；掩码、背压、地址仲裁通过 |
+
+共 9 次选定仿真运行通过；TPU 与 AXI 顶层编译成功。保留原 MMU 测试的 TO_SIGNED 截断警告和启动 / 排空阶段 numeric_std 未知值警告。其他旧 testbench 未逐一迁移与执行。
+
+两套完整系统均使用 N=14，A[i,j]=4(i−j)，W=64I；第一轮覆盖，第二轮累加，p 轮原始结果为 256p(i−j)，有符号 ReLU 右移 8 位后为 max(0,p(i−j))。本例原始值为 256 的整倍数；不宣称覆盖舍入 / 饱和全部边界。TPU testbench 权重 / 统一缓存深度为 32 / 64，AXI testbench 使用顶层默认容量。
+
+Sigmoid、随机长序列、所有网络推理、Vivado 综合 / 时序、SDK / BSP 和 Zynq 板上运行未验证。README 的 177.77 MHz / 72.18 GOPS 属原作者历史评估。halt=0x02 当前没有专门译码；实际有符号 Sigmoid 编码为 0x99。
+
+## 波形与数学核对
+
+MMU VCD 数组未直接输出，生成器按原 RTL 从末行 21 位部分和及符号移位寄存器重建输出，并核对 32 个预期元素；原 MMU RTL、数据和断言不变。首次沿后输出为 115 / 305 ns，原 testbench 下一沿在 125 / 315 ns 读取沿前结果。
+
+系统 testbench 增加仅用于 VCD 的 112 位输入 / 权重 / 输出总线镜像；系统生成器逐行核对实际总线值、自检日志和独立数学预期。控制采沿前、寄存器 / 输出采沿后；结果检查报告在沿后 1 ns，页面到达报告之后才显示已核对结果。阶梯是离散采样显示，不是完整连续事件时序；原始连续波形见 VCD。10 ns 为测试时钟，不代表综合频率。
+
+## 复现与维护
+
+从仓库根目录执行：
+
+```sh
+cd doc/teaching
+python3 generate_trace.py
+python3 generate_system_trace.py
+python3 build_page.py
+node verify_page.cjs
+```
+
+其他机器需要 Python 3 标准库和 GHDL 5.0.1。脚本默认从自身目录定位仓库；只有将教学目录单独复制出来时才需要设置仓库路径：
+
+```sh
+export TINYTPU_ROOT=/path/to/tinyTPU_bck
+python3 generate_trace.py
+python3 generate_system_trace.py
+python3 build_page.py
+```
+
+`generate_trace.py` 优先使用 PATH 中的 ghdl，否则使用当前云环境的 `/workspace/tinytpu-env/bin/ghdl`。构建器验证基础提交、全部 RTL 文件列表与哈希、相对基础提交的 RTL 补丁以及系统 VCD 哈希；提交后的干净工作区同样可以重建，不依赖 HEAD 恰好等于旧提交，避免用过期证据构建页面。更改 RTL 后应重新生成并核对教学结论。
+
+浏览器验证使用 Node.js、可由 Node 解析的 Playwright 包和 Chromium；浏览器路径默认为 `/usr/bin/chromium`，可用 `CHROMIUM_PATH` 指定。输入按脚本位置解析，截图和导出样例写入被忽略的 `.browser-output/`。检查全部 38 个 MMU 和 252 个系统采样、32 个 MMU 和 392 个系统结果、指令编码、导出、播放和手机布局，并要求无 JavaScript 错误、无网络请求。容器的浏览器策略限制 file:// 导航，自动测试通过 setContent 加载；交付页面本身离线可用。
+
+## 交付文件
+
+- `tinyTPU-lab.html`：独立页面。
+- `page.template.html`、`system-section.html`、`system-script.js`、`evidence-section.html`、`build_page.py`：可维护源文件。
+- `generate_trace.py`、`generate_system_trace.py`：执行回归、提取 VCD 与独立数学核对。
+- `verify_page.cjs`：页面验证。
+- `evidence/`：真实日志、两份 VCD、JSON 轨迹、修复补丁；`history/` 为修复前失败日志。
+- `preview.png`：桌面教学预览。
+- `LICENSE.tinyTPU.txt`：原仓库许可；内嵌源码保留版权与许可声明。
+
+教师提供的原 HTML 未修改。
+
+`generate_trace.py` 以 `TINYTPU_BASE_REF` 指定的基础提交（默认上述原始提交）生成仅限 `src/vhdl` 的补丁，适用于已提交修复。浅克隆若缺少基础提交，需要先获取该提交。GHDL 中间文件写入被忽略的 `build/`；运行日志会记录实际机器的命令路径。浏览器检查结果写入 `evidence/browser-checks.txt`。

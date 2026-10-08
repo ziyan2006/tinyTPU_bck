@@ -1,0 +1,7 @@
+$ /workspace/tinytpu-env/bin/ghdl -r --std=08 -frelaxed-rules TB_REGISTER_FILE --assert-level=error
+/workspace/tinyTPU_bck/src/vhdl/Register_File/TB_REGISTER_FILE.vhdl:118:21:@66ns:(report error): Test failed at saving!
+ghdl:error: report failed
+  instance: /tb_register_file/stimulus
+ghdl:error: simulation failed
+
+exit_status=1

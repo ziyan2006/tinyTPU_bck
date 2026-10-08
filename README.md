@@ -33,6 +33,10 @@ A sample model, trained with the MNIST dataset, was evaluated on different sized
 |:-:|:-:|:-:|
 |Duration per input vector in us|62|763|
 
+## Interactive Teaching Lab
+
+Open [the offline teaching page](doc/teaching/tinyTPU-lab.html) in a browser for the actual 4×4 MMU trace, complete 14×14 instruction flow, and 80-bit instruction encoder. [Reproduction instructions and validation scope](doc/teaching/README.md) include the RTL fixes and simulation evidence. Selected GHDL regressions pass; FPGA synthesis, timing and board execution remain unverified.
+
 ## Getting Started
 To get started with tinyTPU, please have a look at getting_started.pdf, where detailed instructions for Xilinx Zynq SoCs and Vivado can be found.
 
