@@ -1,0 +1,266 @@
+{
+  "passthrough": {
+    "weight_instruction_en": {
+      "firstNs": 4785,
+      "lastNs": 4785,
+      "enabledEdges": 1
+    },
+    "weight_en0": {
+      "firstNs": 4825,
+      "lastNs": 4955,
+      "enabledEdges": 14
+    },
+    "mmu_load_weight": {
+      "firstNs": 4855,
+      "lastNs": 4985,
+      "enabledEdges": 14
+    },
+    "mmu_instruction_en": {
+      "firstNs": 4795,
+      "lastNs": 4795,
+      "enabledEdges": 1
+    },
+    "buffer_en0": {
+      "firstNs": 4835,
+      "lastNs": 4965,
+      "enabledEdges": 14
+    },
+    "mmu_activate_weight": {
+      "firstNs": 4865,
+      "lastNs": 4865,
+      "enabledEdges": 1
+    },
+    "reg_write_en": {
+      "firstNs": 5025,
+      "lastNs": 5155,
+      "enabledEdges": 14
+    },
+    "activation_instruction_en": {
+      "firstNs": 4975,
+      "lastNs": 4975,
+      "enabledEdges": 1
+    },
+    "buffer_write_en1": {
+      "firstNs": 5305,
+      "lastNs": 5435,
+      "enabledEdges": 14
+    },
+    "weight_resource_busy": {
+      "firstNs": 4795,
+      "lastNs": 4985,
+      "enabledEdges": 20
+    },
+    "mmu_resource_busy": {
+      "firstNs": 4805,
+      "lastNs": 5155,
+      "enabledEdges": 36
+    },
+    "activation_resource_busy": {
+      "firstNs": 4985,
+      "lastNs": 5435,
+      "enabledEdges": 46
+    },
+    "synchronize": {
+      "firstNs": 5445,
+      "lastNs": 5445,
+      "enabledEdges": 1
+    },
+    "hostRead": {
+      "firstAddressNs": 5455,
+      "firstResponseNs": 5505,
+      "lastResponseNs": 8805,
+      "transactions": 56
+    },
+    "hostWrite": {
+      "initializationTransactions": 112,
+      "instructionTransactions": 12,
+      "firstAddressNs": 45,
+      "firstDataNs": 55,
+      "firstResponseNs": 75,
+      "lastResponseNs": 4995
+    },
+    "irqPin": {
+      "riseNs": [
+        5435
+      ],
+      "fallNs": [
+        5445
+      ]
+    },
+    "syncWaitingEdges": [
+      5035,
+      5045,
+      5055,
+      5065,
+      5075,
+      5085,
+      5095,
+      5105,
+      5115,
+      5125,
+      5135,
+      5145,
+      5155,
+      5165,
+      5175,
+      5185,
+      5195,
+      5205,
+      5215,
+      5225,
+      5235,
+      5245,
+      5255,
+      5265,
+      5275,
+      5285,
+      5295,
+      5305,
+      5315,
+      5325,
+      5335,
+      5345,
+      5355,
+      5365,
+      5375,
+      5385,
+      5395,
+      5405,
+      5415,
+      5425,
+      5435
+    ]
+  },
+  "relu": {
+    "weight_instruction_en": {
+      "firstNs": 4785,
+      "lastNs": 4785,
+      "enabledEdges": 1
+    },
+    "weight_en0": {
+      "firstNs": 4825,
+      "lastNs": 4955,
+      "enabledEdges": 14
+    },
+    "mmu_load_weight": {
+      "firstNs": 4855,
+      "lastNs": 4985,
+      "enabledEdges": 14
+    },
+    "mmu_instruction_en": {
+      "firstNs": 4795,
+      "lastNs": 4795,
+      "enabledEdges": 1
+    },
+    "buffer_en0": {
+      "firstNs": 4835,
+      "lastNs": 4965,
+      "enabledEdges": 14
+    },
+    "mmu_activate_weight": {
+      "firstNs": 4865,
+      "lastNs": 4865,
+      "enabledEdges": 1
+    },
+    "reg_write_en": {
+      "firstNs": 5025,
+      "lastNs": 5155,
+      "enabledEdges": 14
+    },
+    "activation_instruction_en": {
+      "firstNs": 4975,
+      "lastNs": 4975,
+      "enabledEdges": 1
+    },
+    "buffer_write_en1": {
+      "firstNs": 5305,
+      "lastNs": 5435,
+      "enabledEdges": 14
+    },
+    "weight_resource_busy": {
+      "firstNs": 4795,
+      "lastNs": 4985,
+      "enabledEdges": 20
+    },
+    "mmu_resource_busy": {
+      "firstNs": 4805,
+      "lastNs": 5155,
+      "enabledEdges": 36
+    },
+    "activation_resource_busy": {
+      "firstNs": 4985,
+      "lastNs": 5435,
+      "enabledEdges": 46
+    },
+    "synchronize": {
+      "firstNs": 5445,
+      "lastNs": 5445,
+      "enabledEdges": 1
+    },
+    "hostRead": {
+      "firstAddressNs": 5455,
+      "firstResponseNs": 5505,
+      "lastResponseNs": 8805,
+      "transactions": 56
+    },
+    "hostWrite": {
+      "initializationTransactions": 112,
+      "instructionTransactions": 12,
+      "firstAddressNs": 45,
+      "firstDataNs": 55,
+      "firstResponseNs": 75,
+      "lastResponseNs": 4995
+    },
+    "irqPin": {
+      "riseNs": [
+        5435
+      ],
+      "fallNs": [
+        5445
+      ]
+    },
+    "syncWaitingEdges": [
+      5035,
+      5045,
+      5055,
+      5065,
+      5075,
+      5085,
+      5095,
+      5105,
+      5115,
+      5125,
+      5135,
+      5145,
+      5155,
+      5165,
+      5175,
+      5185,
+      5195,
+      5205,
+      5215,
+      5225,
+      5235,
+      5245,
+      5255,
+      5265,
+      5275,
+      5285,
+      5295,
+      5305,
+      5315,
+      5325,
+      5335,
+      5345,
+      5355,
+      5365,
+      5375,
+      5385,
+      5395,
+      5405,
+      5415,
+      5425,
+      5435
+    ]
+  }
+}

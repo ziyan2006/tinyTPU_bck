@@ -1,0 +1,15 @@
+{
+  "packagedSimulations": [
+    "passthrough PASS: 196 output bytes + 28 padding bytes",
+    "relu PASS: 196 output bytes + 28 padding bytes"
+  ],
+  "packagedDataMatchesOriginal": true,
+  "savedSessionsReopened": [
+    "relu-02-multiply: restored lane13=-3328",
+    "passthrough-03-activation: restored lane0=0"
+  ],
+  "browserCheck": "both case selectors, all 12 wave images and data links, observed output matrices, no JavaScript errors",
+  "verifiedRtlFiles": 42,
+  "verifiedOutputFiles": 97,
+  "inputPdfSha256": "1b651beed1ac9f11bfad0cef9cb62aa5515922bac1e10144b21267e5ea2fb9ed"
+}

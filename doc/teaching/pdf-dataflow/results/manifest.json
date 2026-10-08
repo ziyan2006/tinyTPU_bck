@@ -1,0 +1,87 @@
+{
+  "repositoryCommit": "9fffbb67b8b344d9269766f9ee6f4750be714841",
+  "N": 14,
+  "clockNs": 10,
+  "testbenchSha256": "0919d03d38d9354a6865defddea751cbad5082e5e210a51ffe52efcc34db8a16",
+  "rtlSha256": {
+    "src/vhdl/AXI/TB_tinyTPU_v1_0_S00_AXI.vhd": "15fa22c64b5d2af39a8a7d8d23454a53adbfe90b5583415de291f272dc50125f",
+    "src/vhdl/AXI/tinyTPU_v1_0.vhd": "01928e026e85e22a761449337644482700d97493f6d2a476bbdfcae93012143f",
+    "src/vhdl/AXI/tinyTPU_v1_0_S00_AXI.vhd": "d1ffb0bd0919f96044bec064b512a4138a41bd25505eae83956bc319612edc20",
+    "src/vhdl/Activation/ACTIVATION.vhdl": "e5b4e750514462aa1aa44deb25eabef73b1950e7a3d136660edb87113e025bc7",
+    "src/vhdl/Activation/TB_ACTIVATION.vhdl": "f8087a6137e76ec4dcfb540acffa4c4abcf87b5312ed273a03017361a4798ca5",
+    "src/vhdl/Control_Unit/ACC_LOAD_COUNTER.vhdl": "a343a24ab2033821318421231fbda2d6147250c0135c7f03e0e606dcb317dc29",
+    "src/vhdl/Control_Unit/ACTIVATION_CONTROL.vhdl": "4508e943921c5160a93e1ad75d01a31d03430c6bbcfe03754c7e6a80b7758546",
+    "src/vhdl/Control_Unit/CONTROL_COORDINATOR.vhdl": "0847f6d87a0f9f1237b76c682c4e9c858fa0280984fdea8ecf7021fd7ddc784e",
+    "src/vhdl/Control_Unit/DSP_COUNTER.vhdl": "8deb91031ea460bbd762ef980bb3187ffcbd2666e7606efaf7d086c97a5aaa7c",
+    "src/vhdl/Control_Unit/DSP_LOAD_COUNTER.vhdl": "9e0b55c9beadba456bce4092d35ba99908cd5cc26e128ca49cd3daa7c987358d",
+    "src/vhdl/Control_Unit/MATRIX_MULTIPLY_CONTROL.vhdl": "7ce0a9c7b176c6281e49082f5dae9a985ab01c0b029b47d0d4ef21305343a1b3",
+    "src/vhdl/Control_Unit/TB_ACTIVATION_CONTROL.vhdl": "966f9cb71aa474997f5f1cfc718f84a922331be3779e3e07e9fac52bf0394e01",
+    "src/vhdl/Control_Unit/TB_CONTROL_COORDINATOR.vhdl": "ad524111a308f46e3d8ad8ca04cbab38e16080a4325ac5d3f6487272bf29d274",
+    "src/vhdl/Control_Unit/TB_MATRIX_MULTIPLY_CONTROL.vhdl": "c26864486f6b0a11642536e7b580b7cb468edec4afca635b814529b11732cb7b",
+    "src/vhdl/Control_Unit/TB_WEIGHT_CONTROL.vhdl": "60d091d92770f2ccc80806295e4d53c7e7077222e40f621b5dd48266ef42baaa",
+    "src/vhdl/Control_Unit/WEIGHT_CONTROL.vhdl": "ced20027157da0f85c3351de8c053e27065fb2430d6a7393a478c29345eaa872",
+    "src/vhdl/Instruction_FIFO/DIST_RAM.vhdl": "88b6ddff6f6f2efaa699bf259d0aa5fac20bb91a237993856e19f7ee3d13024e",
+    "src/vhdl/Instruction_FIFO/FIFO.vhdl": "a0dccf0a4b0e827be2b0b4e1a328e05d7bb2db9c23e87df7294155e4fd45c88f",
+    "src/vhdl/Instruction_FIFO/INSTRUCTION_FIFO.vhdl": "6de847648285b122feb213ffadbe296ecc3018ec4384561f721e1d67864e33bf",
+    "src/vhdl/Instruction_FIFO/TB_FIFO.vhdl": "5253873458b973e62d1086ccac81f68453ed353d948fc0a08b95182fe24bb80e",
+    "src/vhdl/Instruction_FIFO/TB_INSTRUCTION_FIFO.vhdl": "b20b4f3d334c40815ecc0fdf6cd61efbcee8888ca84ee33551fc7da181fe88c7",
+    "src/vhdl/Look_Ahead/LOOK_AHEAD_BUFFER.vhdl": "c2178e2eb44997a40d77d332786bff862720e7ecf113ba75cd51ba864d43cdda",
+    "src/vhdl/Look_Ahead/TB_LOOK_AHEAD_BUFFER.vhdl": "8cdd448bf0b1465c46e34cc176fa6157282d46e233805db08cc25d04a0084ac1",
+    "src/vhdl/MMU/MACC.vhdl": "0219e7577e835ab72c612dbc312a38ae2db190e0b91b4962bb5de5454a9788bf",
+    "src/vhdl/MMU/MATRIX_MULTIPLY_UNIT.vhdl": "c294292b300d4b470faece6c034eb3b67ff528ac1dfc797c8dfb2ad91593464d",
+    "src/vhdl/MMU/TB_MACC.vhdl": "438277b7c3f6581a2da0d988dd7f983b69a659266fdc6fa3bf3ff71dc4f63a69",
+    "src/vhdl/MMU/TB_MATRIX_MULTIPLY_UNIT.vhdl": "ac450f2d65f6326f08565c82587449a928eae6c9407d7b6faf633fef68c807f6",
+    "src/vhdl/Register_File/REGISTER_FILE.vhdl": "86950b79427746ed6af8f316f0255c71401feccc3290fddda752f398a7e51f17",
+    "src/vhdl/Register_File/TB_REGISTER_FILE.vhdl": "2a80fa7ffa5502c2f47647acabc16894cec0b46edcea46f7244b32dd5394d9b0",
+    "src/vhdl/Runtime/RUNTIME_COUNTER.vhdl": "b519a3b6e955d9655d41a8cd3598c525c4cc8cd51437818e1ab97a5b271cbf3a",
+    "src/vhdl/Runtime/TB_RUNTIME_COUNTER.vhdl": "acbbb915bd459760ad5f31a8d8752bd0f5669ad91fd33db548d743965470c5d3",
+    "src/vhdl/SDS/SYSTOLIC_DATA_SETUP.vhdl": "268d518c4dc4ea8410ee3b47b09aec64da7f2c0c1d8a184ded7610c5bba07ccd",
+    "src/vhdl/SDS/TB_SYSTOLIC_DATA_SETUP.vhdl": "4668034214e0644516c1459eafd6fab39495c931c7670604f7cb8733f4b090b3",
+    "src/vhdl/TB_TPU.vhdl": "90ef71326ab92e483123da2085cef89a82f4794406d79d7aaf61b846ad04958c",
+    "src/vhdl/TB_TPU_CORE.vhdl": "718f717156080daf3fe9b9ac25352bd365482e5a3ab6a90000f151f96ec0971c",
+    "src/vhdl/TB_tinyTPU_AXI.vhdl": "0a590073f6c79f7b43cc44965d26d4ec9558f58093a4d0fa0e950854efc931c2",
+    "src/vhdl/TPU.vhdl": "b86e493985c49a7a73d8ce5adbc9ba6bff371b921b966aa33ae6c3fc52d16307",
+    "src/vhdl/TPU_CORE.vhdl": "2e517702dcdfee38c56398b53d0231be3db633b81a025c088d09ebc6e0a84b0f",
+    "src/vhdl/TPU_pack.vhdl": "4c4514ba1034605aa9c7ec2b1b136fb1c08bf26f62b9d731f963081b55599595",
+    "src/vhdl/Unified_Buffer/TB_UNIFIED_BUFFER.vhdl": "7d8c69089785c64d24b2213261bb8a458401271617d94f6b7acfbc14c0e02a13",
+    "src/vhdl/Unified_Buffer/UNIFIED_BUFFER.vhdl": "e873ed831cf3e5e7c3e7a6762e644904afa240d7e325b52bb1745ae3fdb98960",
+    "src/vhdl/Weight_Buffer/WEIGHT_BUFFER.vhdl": "78b0387d99d3fb3f2c3b1dc67ec2405d11a18465fc01e4c040a66e147fbd8ea3"
+  },
+  "cases": {
+    "passthrough": {
+      "opcodes": [
+        8,
+        32,
+        128,
+        255
+      ],
+      "input": "A[i,j]=i+2j+1",
+      "weights": "W[i,i]=2; W[i,i+1]=1; otherwise 0",
+      "expected": "C=A*W (all values 2..118); output=floor(C/2^24) mod 256, hence zero for this positive small-value case"
+    },
+    "relu": {
+      "opcodes": [
+        9,
+        33,
+        145,
+        255
+      ],
+      "input": "A[i,j]=4(i-j)",
+      "weights": "W=64I",
+      "expected": "C=256(i-j); output=max(0,i-j)"
+    }
+  },
+  "allStartAddresses": 0,
+  "length": 14,
+  "syncLength": 0,
+  "dataHashes": {
+    "build.log": "2a11b586bd33d6c3f06814774e483e1767bb8e938e6b7f80116cc9cc2be39915",
+    "import.log": "6f0abb1ea315f57621a9c0dbffa5396004e0c3e09a8077010ab44731098104a5",
+    "passthrough.ghw": "a5e26b3de09560c8729b7a5435ad54ffbc3346aa3c79bfa3e908fe37332c178e",
+    "passthrough.log": "60ba2c7f2b45ef380d5156c6a33b2da83533f3b242f094eb8c592e93c48f9222",
+    "passthrough.vcd": "c627727d5d4aeea909165266746b49bf2c320e63ab23da8691011131ac50b6fa",
+    "relu.ghw": "33a968f4bdb3cb17f3283a84dee364160352039128d57df531f959b4a227519a",
+    "relu.log": "324473dd0a43434f46dcfc89627fb1afe27d938e867a715c9cf971f5432aac43",
+    "relu.vcd": "49d0c06dd5b14c7aa33939f08cab9a20113cb9a447a25770db497578a6a7223a"
+  }
+}

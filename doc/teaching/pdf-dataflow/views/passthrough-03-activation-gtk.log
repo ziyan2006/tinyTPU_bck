@@ -1,0 +1,14 @@
+Warning: ghw_read_hie: NULL type signal 34564d.
+Loading this file may take a long time.
+Exiting.
+
+GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+
+[0] start time.
+[8825000000] end time.
+GTKWAVE | Executing Tcl script '/workspace/pdf-dataflow-sim/views/passthrough-03-activation.tcl'
+GTKWAVE | Filename '/workspace/pdf-dataflow-sim/views/passthrough-03-activation.gtkw'
+GTKWAVE | Print using 'PS'
+GTKWAVE | Print using 'Letter (8.5" x 11")'
+GTKWAVE | Print using 'Full'
+GTKWAVE | Filename '/workspace/pdf-dataflow-sim/views/passthrough-03-activation.ps'

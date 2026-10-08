@@ -1,0 +1,9 @@
+Warning: ghw_read_hie: NULL type signal 34564d.
+Loading this file may take a long time.
+Exiting.
+
+GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+
+[0] start time.
+[8825000000] end time.
+GTKWAVE | Executing Tcl script '/workspace/pdf-dataflow-sim/views/relu-native.tcl'

@@ -1,0 +1,42 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Thu Oct  8 13:52:08 2026
+[*]
+[dumpfile] "../results/relu.ghw"
+[dumpfile_mtime] "Thu Oct  8 13:36:32 2026"
+[dumpfile_size] 1567441
+[savefile] "relu-04-synchronize.gtkw"
+[timestart] 4960000000
+[size] 1900 570
+[pos] -1 -1
+*-26.315733 5444999999 5035000000 5435000000 5445000000 5455000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[markername] AWAIT_START
+[markername] BLAST_ACT_BUSY
+[markername] CIRQ
+[markername] DHOST_AR
+[signals_width] 580
+@200
+-RELU | 4 SYNCHRONISE | wait for resources, then one IRQ
+--- Coordinator --
+@28
+top.tb_pdf_dataflow.clk
+@22
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.en_flags_cs[0:3]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.en_flags_cs[0] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.en_flags_cs[1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.en_flags_cs[2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.en_flags_cs[3]
+@28
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.instruction_en_cs
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.control_coordinator_i.instruction_running
+@200
+--- Resource interlock --
+@28
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_resource_busy
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_resource_busy
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.activation_resource_busy
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_en1
+top.tb_pdf_dataflow.synchronize
+@24
+top.tb_pdf_dataflow.sync_count
+@28
+top.tb_pdf_dataflow.arvalid
+top.tb_pdf_dataflow.arready
+[pattern_trace] 1
+[pattern_trace] 0

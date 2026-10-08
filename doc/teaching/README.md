@@ -87,4 +87,16 @@ python3 build_page.py
 
 教师提供的原 HTML 未修改。
 
+## PDF 数据流与 GTKWave 实验
+
+按《数据流.pdf》的指令序列补充了 N=14 的直通和有符号 ReLU 两组 AXI 端到端实验。两组均通过，每组核对 196 个原始点积和 196 个输出字节；共导出 12 张实际 GTKWave 波形，覆盖加载权重、乘法、激活、同步、主机读回及总线写缓存。本实验未修改 DUT。
+
+- [波形教学索引](pdf-dataflow/index.html)：切换实验与阶段，查看完整实测矩阵。
+- [中文波形报告](pdf-dataflow/waveform-report.pdf)：14 页结论与重要信号波形。
+- [实验说明与复现命令](pdf-dataflow/README.md)：数据、指令、采样约定和实际时序。
+- `pdf-dataflow/results/`：原始 GHW/VCD、日志和逐项核对结果。
+- `pdf-dataflow/views/`：PNG、原生 PS/PDF、可编辑 GTKWave 会话及导出脚本。
+
+直通（NO_ACTIVATION）实际取累加结果的 `[31:24]` 高 8 位，本组原始点积为 2～118，因此输出全零；原始点积已独立核对，不能仅凭输出全零判断通过。
+
 `generate_trace.py` 以 `TINYTPU_BASE_REF` 指定的基础提交（默认上述原始提交）生成仅限 `src/vhdl` 的补丁，适用于已提交修复。浅克隆若缺少基础提交，需要先获取该提交。GHDL 中间文件写入被忽略的 `build/`；运行日志会记录实际机器的命令路径。浏览器检查结果写入 `evidence/browser-checks.txt`。

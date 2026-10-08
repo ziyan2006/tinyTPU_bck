@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Thu Oct  8 13:56:53 2026
+[*]
+[dumpfile] "../results/passthrough.ghw"
+[dumpfile_mtime] "Thu Oct  8 13:36:32 2026"
+[dumpfile_size] 1426207
+[savefile] "passthrough-06-host-write-cache.gtkw"
+[timestart] 40000000
+[size] 1900 648
+[pos] -1 -1
+*-25.852285 94999999 95000000 115000000 335000000 355000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[markername] AUB_WDATA_0
+[markername] BUB_BRESP_0
+[markername] CPARTIAL_WDATA
+[markername] DPARTIAL_BRESP
+[signals_width] 800
+@200
+-PASSTHROUGH | 6 HOST AXI WRITE CACHE | PDF last diagram; input initialization
+--- Host write channels --
+@28
+top.tb_pdf_dataflow.clk
+@22
+#{top.tb_pdf_dataflow.awaddr[19:0]} top.tb_pdf_dataflow.awaddr[19] top.tb_pdf_dataflow.awaddr[18] top.tb_pdf_dataflow.awaddr[17] top.tb_pdf_dataflow.awaddr[16] top.tb_pdf_dataflow.awaddr[15] top.tb_pdf_dataflow.awaddr[14] top.tb_pdf_dataflow.awaddr[13] top.tb_pdf_dataflow.awaddr[12] top.tb_pdf_dataflow.awaddr[11] top.tb_pdf_dataflow.awaddr[10] top.tb_pdf_dataflow.awaddr[9] top.tb_pdf_dataflow.awaddr[8] top.tb_pdf_dataflow.awaddr[7] top.tb_pdf_dataflow.awaddr[6] top.tb_pdf_dataflow.awaddr[5] top.tb_pdf_dataflow.awaddr[4] top.tb_pdf_dataflow.awaddr[3] top.tb_pdf_dataflow.awaddr[2] top.tb_pdf_dataflow.awaddr[1] top.tb_pdf_dataflow.awaddr[0]
+@28
+top.tb_pdf_dataflow.awvalid
+top.tb_pdf_dataflow.awready
+@22
+#{top.tb_pdf_dataflow.wdata[31:0]} top.tb_pdf_dataflow.wdata[31] top.tb_pdf_dataflow.wdata[30] top.tb_pdf_dataflow.wdata[29] top.tb_pdf_dataflow.wdata[28] top.tb_pdf_dataflow.wdata[27] top.tb_pdf_dataflow.wdata[26] top.tb_pdf_dataflow.wdata[25] top.tb_pdf_dataflow.wdata[24] top.tb_pdf_dataflow.wdata[23] top.tb_pdf_dataflow.wdata[22] top.tb_pdf_dataflow.wdata[21] top.tb_pdf_dataflow.wdata[20] top.tb_pdf_dataflow.wdata[19] top.tb_pdf_dataflow.wdata[18] top.tb_pdf_dataflow.wdata[17] top.tb_pdf_dataflow.wdata[16] top.tb_pdf_dataflow.wdata[15] top.tb_pdf_dataflow.wdata[14] top.tb_pdf_dataflow.wdata[13] top.tb_pdf_dataflow.wdata[12] top.tb_pdf_dataflow.wdata[11] top.tb_pdf_dataflow.wdata[10] top.tb_pdf_dataflow.wdata[9] top.tb_pdf_dataflow.wdata[8] top.tb_pdf_dataflow.wdata[7] top.tb_pdf_dataflow.wdata[6] top.tb_pdf_dataflow.wdata[5] top.tb_pdf_dataflow.wdata[4] top.tb_pdf_dataflow.wdata[3] top.tb_pdf_dataflow.wdata[2] top.tb_pdf_dataflow.wdata[1] top.tb_pdf_dataflow.wdata[0]
+#{top.tb_pdf_dataflow.wstrb[3:0]} top.tb_pdf_dataflow.wstrb[3] top.tb_pdf_dataflow.wstrb[2] top.tb_pdf_dataflow.wstrb[1] top.tb_pdf_dataflow.wstrb[0]
+@28
+top.tb_pdf_dataflow.wvalid
+top.tb_pdf_dataflow.wready
+top.tb_pdf_dataflow.bvalid
+top.tb_pdf_dataflow.bready
+@22
+#{top.tb_pdf_dataflow.bresp[1:0]} top.tb_pdf_dataflow.bresp[1] top.tb_pdf_dataflow.bresp[0]
+@200
+--- AXI wrapper to unified cache --
+@22
+#{top.tb_pdf_dataflow.dut_i.buffer_write_enable[0:13]} top.tb_pdf_dataflow.dut_i.buffer_write_enable[0] top.tb_pdf_dataflow.dut_i.buffer_write_enable[1] top.tb_pdf_dataflow.dut_i.buffer_write_enable[2] top.tb_pdf_dataflow.dut_i.buffer_write_enable[3] top.tb_pdf_dataflow.dut_i.buffer_write_enable[4] top.tb_pdf_dataflow.dut_i.buffer_write_enable[5] top.tb_pdf_dataflow.dut_i.buffer_write_enable[6] top.tb_pdf_dataflow.dut_i.buffer_write_enable[7] top.tb_pdf_dataflow.dut_i.buffer_write_enable[8] top.tb_pdf_dataflow.dut_i.buffer_write_enable[9] top.tb_pdf_dataflow.dut_i.buffer_write_enable[10] top.tb_pdf_dataflow.dut_i.buffer_write_enable[11] top.tb_pdf_dataflow.dut_i.buffer_write_enable[12] top.tb_pdf_dataflow.dut_i.buffer_write_enable[13]
+@28
+top.tb_pdf_dataflow.dut_i.buffer_enable_on_write
+@22
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[0][0]
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.buffer_write_port[13][0]
+[pattern_trace] 1
+[pattern_trace] 0

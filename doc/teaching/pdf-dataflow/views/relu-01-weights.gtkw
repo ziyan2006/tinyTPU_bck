@@ -1,0 +1,45 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Thu Oct  8 13:51:56 2026
+[*]
+[dumpfile] "../results/relu.ghw"
+[dumpfile_mtime] "Thu Oct  8 13:36:32 2026"
+[dumpfile_size] 1567441
+[savefile] "relu-01-weights.gtkw"
+[timestart] 4740000000
+[size] 1900 596
+[pos] -1 -1
+*-25.250515 4854999999 4785000000 4825000000 4855000000 4985000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[markername] AWEIGHT_CMD
+[markername] BWB_READ_0
+[markername] CMMU_LOAD_0
+[markername] DMMU_LOAD_13
+[signals_width] 420
+@200
+-RELU | 1 WEIGHT BUFFER -> MMU | 14 rows
+--- Control --
+@28
+top.tb_pdf_dataflow.clk
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction_en
+@22
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_instruction.op_code[0]
+@28
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_resource_busy
+@200
+--- Weight cache and MMU --
+@28
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_en0
+@24
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[39:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[39] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[38] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[37] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[36] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[35] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[34] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[33] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[32] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[31] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[30] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[29] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[28] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[27] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[26] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[25] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[24] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[23] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[22] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[21] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[20] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[19] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[18] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[17] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[16] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[15] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[14] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[13] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[12] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[11] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[10] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[9] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[8] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_address0[0]
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[0][0]
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[1][0]
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.weight_read_port0[13][0]
+@28
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_load_weight
+@24
+#{top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[7:0]} top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[7] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[6] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[5] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[4] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[3] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[2] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[1] top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_address[0]
+@28
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_weight_signed
+top.tb_pdf_dataflow.dut_i.tpu_i.tpu_core_i.mmu_activate_weight
+[pattern_trace] 1
+[pattern_trace] 0

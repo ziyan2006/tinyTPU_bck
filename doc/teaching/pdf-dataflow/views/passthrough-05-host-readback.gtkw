@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Thu Oct  8 13:56:49 2026
+[*]
+[dumpfile] "../results/passthrough.ghw"
+[dumpfile_mtime] "Thu Oct  8 13:36:32 2026"
+[dumpfile_size] 1426207
+[savefile] "passthrough-05-host-readback.gtkw"
+[timestart] 5420000000
+[size] 1900 596
+[pos] -1 -1
+*-26.493631 5744999999 5445000000 5455000000 5505000000 5745000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[markername] AIRQ
+[markername] BAR_ROW0_W0
+[markername] CR_ROW0_W0
+[markername] DR_ROW1_W0
+[signals_width] 730
+@200
+-PASSTHROUGH | 5 HOST AXI READ | first two vector rows (56 reads total)
+--- Read address channel --
+@28
+top.tb_pdf_dataflow.clk
+top.tb_pdf_dataflow.synchronize
+@22
+#{top.tb_pdf_dataflow.araddr[19:0]} top.tb_pdf_dataflow.araddr[19] top.tb_pdf_dataflow.araddr[18] top.tb_pdf_dataflow.araddr[17] top.tb_pdf_dataflow.araddr[16] top.tb_pdf_dataflow.araddr[15] top.tb_pdf_dataflow.araddr[14] top.tb_pdf_dataflow.araddr[13] top.tb_pdf_dataflow.araddr[12] top.tb_pdf_dataflow.araddr[11] top.tb_pdf_dataflow.araddr[10] top.tb_pdf_dataflow.araddr[9] top.tb_pdf_dataflow.araddr[8] top.tb_pdf_dataflow.araddr[7] top.tb_pdf_dataflow.araddr[6] top.tb_pdf_dataflow.araddr[5] top.tb_pdf_dataflow.araddr[4] top.tb_pdf_dataflow.araddr[3] top.tb_pdf_dataflow.araddr[2] top.tb_pdf_dataflow.araddr[1] top.tb_pdf_dataflow.araddr[0]
+@28
+top.tb_pdf_dataflow.arvalid
+top.tb_pdf_dataflow.arready
+@24
+top.tb_pdf_dataflow.read_row
+top.tb_pdf_dataflow.read_chunk
+@200
+--- Read response channel --
+@28
+top.tb_pdf_dataflow.rvalid
+top.tb_pdf_dataflow.rready
+@22
+#{top.tb_pdf_dataflow.rdata[31:0]} top.tb_pdf_dataflow.rdata[31] top.tb_pdf_dataflow.rdata[30] top.tb_pdf_dataflow.rdata[29] top.tb_pdf_dataflow.rdata[28] top.tb_pdf_dataflow.rdata[27] top.tb_pdf_dataflow.rdata[26] top.tb_pdf_dataflow.rdata[25] top.tb_pdf_dataflow.rdata[24] top.tb_pdf_dataflow.rdata[23] top.tb_pdf_dataflow.rdata[22] top.tb_pdf_dataflow.rdata[21] top.tb_pdf_dataflow.rdata[20] top.tb_pdf_dataflow.rdata[19] top.tb_pdf_dataflow.rdata[18] top.tb_pdf_dataflow.rdata[17] top.tb_pdf_dataflow.rdata[16] top.tb_pdf_dataflow.rdata[15] top.tb_pdf_dataflow.rdata[14] top.tb_pdf_dataflow.rdata[13] top.tb_pdf_dataflow.rdata[12] top.tb_pdf_dataflow.rdata[11] top.tb_pdf_dataflow.rdata[10] top.tb_pdf_dataflow.rdata[9] top.tb_pdf_dataflow.rdata[8] top.tb_pdf_dataflow.rdata[7] top.tb_pdf_dataflow.rdata[6] top.tb_pdf_dataflow.rdata[5] top.tb_pdf_dataflow.rdata[4] top.tb_pdf_dataflow.rdata[3] top.tb_pdf_dataflow.rdata[2] top.tb_pdf_dataflow.rdata[1] top.tb_pdf_dataflow.rdata[0]
+#{top.tb_pdf_dataflow.rresp[1:0]} top.tb_pdf_dataflow.rresp[1] top.tb_pdf_dataflow.rresp[0]
+#{top.tb_pdf_dataflow.expected_word[31:0]} top.tb_pdf_dataflow.expected_word[31] top.tb_pdf_dataflow.expected_word[30] top.tb_pdf_dataflow.expected_word[29] top.tb_pdf_dataflow.expected_word[28] top.tb_pdf_dataflow.expected_word[27] top.tb_pdf_dataflow.expected_word[26] top.tb_pdf_dataflow.expected_word[25] top.tb_pdf_dataflow.expected_word[24] top.tb_pdf_dataflow.expected_word[23] top.tb_pdf_dataflow.expected_word[22] top.tb_pdf_dataflow.expected_word[21] top.tb_pdf_dataflow.expected_word[20] top.tb_pdf_dataflow.expected_word[19] top.tb_pdf_dataflow.expected_word[18] top.tb_pdf_dataflow.expected_word[17] top.tb_pdf_dataflow.expected_word[16] top.tb_pdf_dataflow.expected_word[15] top.tb_pdf_dataflow.expected_word[14] top.tb_pdf_dataflow.expected_word[13] top.tb_pdf_dataflow.expected_word[12] top.tb_pdf_dataflow.expected_word[11] top.tb_pdf_dataflow.expected_word[10] top.tb_pdf_dataflow.expected_word[9] top.tb_pdf_dataflow.expected_word[8] top.tb_pdf_dataflow.expected_word[7] top.tb_pdf_dataflow.expected_word[6] top.tb_pdf_dataflow.expected_word[5] top.tb_pdf_dataflow.expected_word[4] top.tb_pdf_dataflow.expected_word[3] top.tb_pdf_dataflow.expected_word[2] top.tb_pdf_dataflow.expected_word[1] top.tb_pdf_dataflow.expected_word[0]
+@24
+top.tb_pdf_dataflow.checked_bytes
+[pattern_trace] 1
+[pattern_trace] 0
