@@ -12,7 +12,7 @@
     "activation": 196
   },
   "filesSha256": {
-    "README.md": "c15e111a77e6988a14dc63d1e4d40e7e7812072309218baacd9efc143262af93",
+    "README.md": "292c6c7464d1b8c05e6323205b7db13c980d250d53441fe6cf7cdd54602fa6e8",
     "index.html": "3cc1c56d8b06bac5cf005cdaefb8722769e20eeaa70d88e3abd9433174ad85da",
     "results/build.log": "2a11b586bd33d6c3f06814774e483e1767bb8e938e6b7f80116cc9cc2be39915",
     "results/import.log": "6f0abb1ea315f57621a9c0dbffa5396004e0c3e09a8077010ab44731098104a5",
@@ -108,10 +108,12 @@
     "views/relu-native-gtk.log": "39e4e81e847800143b1d3890df4f1f6759f90d7fec82c9bcb081964154e2bce2",
     "views/relu-native.tcl": "6844967561cf8e3177f48c827e8f6addb4e164d2027f078c5221838db9700e19",
     "views/views.json": "3e86e81137fd71311a1fe28cd4b8567076edf2a3906f6489ebfe417b43272635",
-    "waveform-report.pdf": "d98d00b56f3894285f933e5c0896e6cc241837d1f8ca43f4b0f82a4ff15d6cc7"
+    "waveform-report.pdf": "d98d00b56f3894285f933e5c0896e6cc241837d1f8ca43f4b0f82a4ff15d6cc7",
+    "waveforms.zip": "a707668f61761150e22a37d41c86ba5ee4b0c312712df8d0a3750bf065a731fc",
+    "waveforms.zip.sha256": "5ace2b2d3cc65d574d165857bfd17db726bbdf0982ed9765ebb93f26dc88cd23"
   },
   "experimentSourceSha256": {
-    "README.md": "c15e111a77e6988a14dc63d1e4d40e7e7812072309218baacd9efc143262af93",
+    "README.md": "292c6c7464d1b8c05e6323205b7db13c980d250d53441fe6cf7cdd54602fa6e8",
     "TB_PDF_DATAFLOW.vhdl": "0919d03d38d9354a6865defddea751cbad5082e5e210a51ffe52efcc34db8a16",
     "analyze_vcd.py": "83382a86f906f46a279d453b6e622e44c97de8760c67a618cd7d4d7116ab9322",
     "build_report.py": "9dc40a94bd4ad5d6ebb07dc0f20e8a74f79600026d6fe4753e088025ae88f947",

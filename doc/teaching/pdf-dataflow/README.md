@@ -2,7 +2,7 @@
 
 在 `9fffbb67b8b344d9269766f9ee6f4750be714841` 的实际 RTL 上，用 GHDL 5.0.1 跑两组完整 AXI 端到端仿真，再由 GTKWave 3.3.121 读取原生 GHW 并导出波形。两组均通过，仿真在 8826 ns 自检完成后主动结束。本实验没有修改 DUT。
 
-打开 [波形教学索引](index.html) 可切换两组实验、查看六个阶段和完整实测矩阵；[中文波形报告](waveform-report.pdf) 适合下载打印。`views/` 包含 12 张 PNG、12 个原生矢量 PDF/PS 和 12 个可编辑 `.gtkw` 会话；`results/` 保存 GHW、VCD、自检日志、逐拍分析及 GTKWave 内部数组采样。
+打开 [波形教学索引](index.html) 可切换两组实验、查看六个阶段和完整实测矩阵；[中文波形报告](waveform-report.pdf) 适合下载打印。[波形图片压缩包](waveforms.zip) 包含按两组实验分类的 12 张 PNG；校验值见 `waveforms.zip.sha256`。`views/` 包含 12 张 PNG、12 个原生矢量 PDF/PS 和 12 个可编辑 `.gtkw` 会话；`results/` 保存 GHW、VCD、自检日志、逐拍分析及 GTKWave 内部数组采样。
 
 ## 与 PDF 的对应关系
 
