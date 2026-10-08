@@ -1,4 +1,4 @@
-let flowStage=0,flowRow=7,flowColumn=1,flowMatrixSelection=null;
+let flowStage=1,flowRow=7,flowColumn=1,flowMatrixSelection=null;
 const FLOW_LESSONS=[
  {title:'先填缓存：让硬件有输入和权重',path:'主机 AXI → 权重缓存 / 统一缓存',source:'src/vhdl/AXI/tinyTPU_v1_0_S00_AXI.vhd',why:'RAM 复位不代表数据已经填好。每个 14 字节向量按 16 字节地址步长写入，最后一个 32 位字只写低两字节。',next:'数据填好后，主机分三次写入第一条 80 位加载权重指令。',signals:[['AWVALID / AWREADY','握手时接受写地址；0x00000 是权重缓存，0x80000 是统一缓存。'],['WVALID / WREADY / WSTRB','握手时接受数据；WSTRB=0xF 写四字节，0x3 只写本行最后两字节。'],['BVALID / BREADY / BRESP','响应握手才解释 BRESP；本实验全部有效写响应为 OKAY。']]},
  {title:'加载权重：缓存中的 W 进入 MMU',path:'权重缓存 → MMU 预装权重',source:'src/vhdl/Control_Unit/WEIGHT_CONTROL.vhdl',why:'矩阵乘法阵列要使用本次 W。缓存读有流水延迟，不能把发出读地址与权重到达 MMU 当作同一个时刻。',next:'权重加载与输入乘法可以流水重叠；下一步查看输入如何错拍进入阵列。',signals:[['weight_instruction_en','该采样沿才解释加载指令；无符号为 0x08，有符号为 0x09。'],['weight_en0 / weight_address0','有效采样沿读取权重缓存第 0～13 行。'],['mmu_load_weight / mmu_weight_address','在该使能有效时 MMU 消费 14 个权重向量，地址为 0～13。']]},
@@ -36,7 +36,7 @@ function renderFlow(){
  $('flow-activation-note').textContent=key==='relu'?'有符号 ReLU：先用原始低字节的 bit7 舍入右移 8 位，再截负值为 0、截大于 127 的值为 127。本组 C 均为 256 的整数倍，不触发正向饱和。':'直通不是取低字节：当前 NO_ACTIVATION 实际取 32 位点积的 [31:24] 高 8 位。本组 C 为 2～118，输出全部为 0；196 个原始点积也已独立核对。';
  $('flow-results').innerHTML=`<div><span>各行每拍回写一个向量</span><b>${t.buffer_write_en1.firstNs}～${t.buffer_write_en1.lastNs} ns</b><p>14 个连续有效采样沿。首尾相差 13 拍，不是只写了 13 行。</p></div><div><span>IRQ 引脚拉高 / 主机采样</span><b>${t.irqPin.riseNs[0]} / ${t.synchronize.firstNs} ns</b><p>脉冲宽 10 ns；必须区分跳变时刻与被主机消费的采样沿。</p></div><div><span>本组全部读回通过</span><b>196 + 28 字节</b><p>196 个结果字节与 28 个零填充字节，仿真在 8826 ns 自检完成后正常结束。</p></div>`;
  $('flow-log').textContent=c.log;$('flow-provenance').textContent=`本次实验 RTL 基线 ${PDF_FLOW.commit} · N=${PDF_FLOW.N} · GHDL 5.0.1 / GTKWave 3.3.121 · 原始 GHW、VCD 和可编辑会话位于仓库 doc/teaching/pdf-dataflow。`;
- renderFlowMatrix();renderFlowZoom();
+ renderFlowMatrix();renderFlowZoom();if(window.hardwareReady)hardwareStage(flowStage);
 }
 function renderFlowMatrix(){
  const c=flowCurrent(),kind=$('flow-matrix-kind').value,m=c[kind],i=flowRow,j=flowColumn;

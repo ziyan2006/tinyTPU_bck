@@ -1,6 +1,7 @@
 """Load verified PDF experiments into the standalone teaching page."""
 from pathlib import Path
 import base64, hashlib, json, re, zipfile
+from load_flow_trace import load_flow_trace
 
 STAGE_ORDER = ['06-host-write-cache', '01-weights', '02-multiply',
                '03-activation', '04-synchronize', '05-host-readback']
@@ -49,6 +50,7 @@ def load_dataflow(teaching, root):
                                  'output': analysis['actualHostOutput'], 'writeback': native['actual']['activation'],
                                  'timing': analysis['timing'], 'commands': commands,
                                  'checkpoints': analysis['nativeGhwCheckpoints'], 'log': log}
+        bundle['cases'][key]['frames'] = load_flow_trace(base / f'results/{key}.vcd', bundle['cases'][key], signed=key == 'relu')
         for stage in STAGE_ORDER:
             name = key + '-' + stage
             bundle['images'][name] = binary('views/' + name + '.png', 'image/png')

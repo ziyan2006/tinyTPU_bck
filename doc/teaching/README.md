@@ -1,6 +1,6 @@
 # tinyTPU 时钟实验室
 
-直接用浏览器打开 `tinyTPU-lab.html`。独立离线页面内含真实轨迹、24 个源码文件、12 张原生 GTKWave 波形、实测矩阵、日志、修复补丁与 MMU 原始 VCD，无网络字体或前端依赖。PNG、波形 ZIP、中文 PDF 报告及实验 JSON 均可直接从页面离线下载。
+直接用浏览器打开 `tinyTPU-lab.html`。默认进入指令与硬件数据流演示，按教师 HTML 的“选指令 → 分步骤 / 逐时钟 → 框图联动 → 查看交接数据”组织学习。独立离线页面内含真实轨迹、24 个源码文件、12 张原生 GTKWave 波形、实测矩阵、日志、修复补丁与 MMU 原始 VCD，无网络字体或前端依赖。PNG、波形 ZIP、中文 PDF 报告及实验 JSON 均可直接从页面离线下载。
 
 ## 在线访问与发布
 
@@ -12,13 +12,15 @@
 
 ## 教学内容
 
-1. 4×4 阵列基础：原 MMU testbench 的两组矩阵、16 个 MACC 寄存器、38 个上升沿、逐步骤 / 逐时钟与点积解释。
-2. 完整 14×14 系统：实际入队的 8 条指令、252 个连续采样、控制使能、覆盖 / 累加、有符号 ReLU、同步和 392 字节实际读回。
-3. PDF 数据流实验：两组 N=14 的完整 AXI 实验，分别执行直通 / 有符号 ReLU；按初始化、加载权重、乘法、激活、同步、读回六阶段教学。波形可放大，指令表区分主机提交与核心采样；可选 14×14 矩阵元素，展开 A×W、原始 C 和实际 Y。
+1. 指令与硬件数据流：两组 N=14 的完整 AXI 实验，分别执行直通 / 有符号 ReLU。选择 `read_weights`、`matrix_multiply`、`activate`、`synchronise`，在用户框图对应的 AXI、FIFO、控制器、两块缓存、SDS、MMU、累加器和激活单元上联动演示；另有主机初始化与读回。支持关键交接步骤、10 ns 逐拍、播放、任意时刻定位、模块源码查看、112 / 448 位真实交接向量、SDS 通道来源行、当前已交接进度和两条指令同时忙的显示。下方保留波形、80 位命令及完整矩阵证据。
+2. 4×4 阵列基础：原 MMU testbench 的两组矩阵、16 个 MACC 寄存器、38 个上升沿、逐步骤 / 逐时钟与点积解释。
+3. 完整 14×14 系统：实际入队的 8 条指令、252 个连续采样、控制使能、覆盖 / 累加、有符号 ReLU、同步和 392 字节实际读回。
 4. 80 位指令工作台：按 RTL 编码，BigInt 位宽检查；解释符号、累加与激活枚举。
 5. 修复与证据：回归日志、源码、补丁哈希、配置差异和未测范围。
 
-支持播放、关键时刻定位、键盘、手机布局与 CSV / JSON / VCD / SVG / 源码 / 补丁导出。第二章的完整 TPU 时间轴走直接主机端口；第三章使用独立 AXI 实验的真实 GTKWave 波形。第三章的阶段导航按教学流程组织，矩阵面板显示全部完成后的实测数据，不把阶段选择当作硬件当前时刻。
+支持播放、关键时刻定位、键盘、手机布局与 CSV / JSON / VCD / SVG / 源码 / 补丁导出。第一章使用独立 AXI 实验的 VCD / 原生 GHW；第三章的完整 TPU 时间轴走直接主机端口。第一章的框图与交接数据由当前采样沿驱动，最终矩阵面板仍显示全部完成后的实测数据。选择某条指令会跳到它的起点；全程时钟滑块保留其他指令的同时活动，不能将指令依次提交理解为执行互不重叠。
+
+第一章每组采样 883 个真实上升沿（5～8825 ns），高亮仅按沿前使能 / 握手判定；缓存发出读请求与向量到达的时刻分开显示。GHDL 的 VCD 不直接导出数组，`load_flow_trace.py` 用实际 RAM 位向量及缓存两级读寄存器、SDS 的复位 / 使能规则重建缓存读端和各通道。全部 14 次权重交接与原生 GHW 核对，全部有效输入行与实际初始化数据核对；另用 GTKWave 对原生 GHW 的 `buffer_read_port0` 和 `sds_systolic_output` 逐通道独立读取，每组全部 196 个输入和 196 个有效错拍通道值与重建一致，记录在 `evidence/hardware-native.json`。构建器核对原始 GHW / VCD 哈希和全部有效通道，拒绝过期证据。C 和激活向量直接使用已核对的原生 GHW 采样。没有伪造 MMU 内部逐拍部分和或激活输入端的完整数组。累加器 → 激活的琥珀色通路表示流水处理中，青色写回才表示有效输出。
 
 教师 HTML 仅用作界面风格与教学组织参考，其说明不作为操作指令。没有复制另一套 NPU 的指令、DMA、卷积、上采样或仿真结论。用户硬件框图的相对布局对应仓库模块；其中周期标注不直接当作通用延迟。
 
@@ -84,7 +86,7 @@ python3 build_page.py
 
 浏览器验证使用 Node.js、可由 Node 解析的 Playwright 包和 Chromium；浏览器路径默认为 `/usr/bin/chromium`，可用 `CHROMIUM_PATH` 指定。输入按脚本位置解析，截图和导出样例写入被忽略的 `.browser-output/`。检查全部 38 个 MMU 和 252 个系统采样、32 个 MMU 和 392 个系统结果、指令编码、导出、播放和手机布局，并要求无 JavaScript 错误、无网络请求。容器的浏览器策略限制 file:// 导航，自动测试通过 setContent 加载；交付页面本身离线可用。
 
-新增 PDF 章节还核对两组全部矩阵、12 张波形与原 PNG 的逐字节一致性、六阶段和矩阵选择、正负点积、键盘、波形缩放及 PNG/ZIP/PDF 的离线下载。`load_dataflow.py` 在构建前验证 PDF 实验的 RTL / testbench / 证据哈希、实际结果与独立点积、日志里的四条 80 位指令，以及压缩包内 12 张图片与页面图片一致。只更新网页时运行 `python3 build_page.py` 和 `node verify_page.cjs` 即可。
+新增 PDF 章节还核对两组全部矩阵、12 张波形与原 PNG 的逐字节一致性、六阶段和矩阵选择、正负点积、键盘、波形缩放及 PNG/ZIP/PDF 的离线下载。硬件演示额外核对两组全部权重 / 点积 / 激活交接高亮和向量、缓存请求与数据到达分离、SDS 通道的来源行、并行资源、同步等待 / IRQ、播放与停止、键盘查看源码，以及默认打开指令演示。`load_dataflow.py` 在构建前验证 PDF 实验的 RTL / testbench / 证据哈希、实际结果与独立点积、日志里的四条 80 位指令，以及压缩包内 12 张图片与页面图片一致。只更新网页时运行 `python3 build_page.py` 和 `node verify_page.cjs` 即可。
 
 如需重新跑 PDF 实验并同步网站，在 `doc/teaching` 中执行以下步骤（GTKWave 需要桌面或 Xvfb；工具要求详见 PDF 实验 README）：
 
@@ -93,6 +95,7 @@ python3 pdf-dataflow/run_simulations.py
 python3 pdf-dataflow/analyze_vcd.py
 python3 pdf-dataflow/render_gtkwave.py
 python3 pdf-dataflow/build_report.py
+python3 verify_hardware_trace.py
 python3 build_page.py
 node verify_page.cjs
 ```
@@ -102,6 +105,8 @@ node verify_page.cjs
 - `tinyTPU-lab.html`：独立页面。
 - `page.template.html`、`system-section.html`、`system-script.js`、`evidence-section.html`、`build_page.py`：可维护源文件。
 - `dataflow-section.html`、`dataflow-script.js`、`dataflow-style.css`、`load_dataflow.py`：PDF 教学章节及实测证据加载 / 校验。
+- `hardware-flow-section.html`、`hardware-flow-script.js`、`hardware-flow-style.css`、`load_flow_trace.py`：指令对应硬件演示、实时交接数据和 VCD 采样 / 有限寄存器重建。
+- `verify_hardware_trace.py`、`evidence/hardware-native.json`：从原生 GHW 独立核对全部有效输入 / SDS 通道值及其证据。
 - `generate_trace.py`、`generate_system_trace.py`：执行回归、提取 VCD 与独立数学核对。
 - `verify_page.cjs`：页面验证。
 - `evidence/`：真实日志、两份 VCD、JSON 轨迹、修复补丁；`history/` 为修复前失败日志。

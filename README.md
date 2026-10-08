@@ -37,6 +37,8 @@ A sample model, trained with the MNIST dataset, was evaluated on different sized
 
 GitHub Pages is configured for [the online teaching lab](https://ziyan2006.github.io/tinyTPU_bck/), including the two PDF dataflow experiments and all 12 GTKWave waveform images. Publication uses **Deploy from a branch → master → / (root)**. The root entry opens the same standalone HTML used offline; pushes to `master` update the site automatically after deployment completes.
 
+The default view demonstrates `read_weights`, `matrix_multiply`, `activate`, and `synchronise` directly on the hardware diagram, with step/clock playback, actual vector transfers, SDS lane timing, and overlapping resource activity for both verified AXI experiments.
+
 Open [the offline teaching page](doc/teaching/tinyTPU-lab.html) in a browser for the actual 4×4 MMU trace, complete 14×14 instruction flow, and 80-bit instruction encoder. [Reproduction instructions and validation scope](doc/teaching/README.md) include the RTL fixes and simulation evidence. Selected GHDL regressions pass; FPGA synthesis, timing and board execution remain unverified.
 
 ## Getting Started
