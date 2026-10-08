@@ -48,6 +48,36 @@ const {chromium}=require('playwright');const fs=require('fs');const path=require
  await page.locator('[data-smodule="register"]').click();await page.locator('#system-module-source').click();assert((await page.locator('#source-content').textContent()).includes('ACC_ACCU_ADDRESS'));await page.keyboard.press('Escape');
  const sysWait=page.waitForEvent('download');await page.locator('#system-download').click();await(await sysWait).saveAs(path.join(SCRATCH,'export-system-trace.json'));assert.deepEqual(JSON.parse(fs.readFileSync(path.join(SCRATCH,'export-system-trace.json'))),sys);
  await page.locator('#system-pass').selectOption('2');await page.locator('#system-row').selectOption('13');await page.locator('#system-goto-row').click();await page.screenshot({path:path.join(SCRATCH,'system-desktop.png'),fullPage:true});
+ // The new chapter uses the original GTKWave images and observed GHW/AXI data.
+ await page.locator('#tab-system').focus();await page.keyboard.press('ArrowRight');assert.equal(await page.locator('#tab-dataflow').getAttribute('aria-selected'),'true');
+ const flowStages=['06-host-write-cache','01-weights','02-multiply','03-activation','04-synchronize','05-host-readback'];
+ for(const key of ['passthrough','relu']){
+  await page.locator('#flow-case').selectOption(key);
+  const native=JSON.parse(fs.readFileSync(path.join(ROOT,'pdf-dataflow/results',key+'-native-verified.json'))),analysis=JSON.parse(fs.readFileSync(path.join(ROOT,'pdf-dataflow/results',key+'-analysis.json')));
+  for(let i=0;i<6;i++){
+   await page.locator('#flow-stages [data-flow-stage="'+i+'"]').click();await page.locator('#flow-wave-image').evaluate(img=>img.decode());
+   assert.equal(await page.locator('#flow-stages [aria-pressed="true"]').count(),1);
+   const src=await page.locator('#flow-wave-image').getAttribute('src');assert.equal(src,'data:image/png;base64,'+fs.readFileSync(path.join(ROOT,'pdf-dataflow/views',key+'-'+flowStages[i]+'.png')).toString('base64'));
+   assert.equal(await page.locator('#flow-markers tr').count(),4);
+  }
+  const inputs=Array.from({length:14},(_,i)=>Array.from({length:14},(_,j)=>key==='relu'?4*(i-j):i+2*j+1));
+  for(const [kind,expected] of [['input',inputs],['weights',native.actual.weight],['raw',native.actual.mmu],['output',analysis.actualHostOutput]]){
+   await page.locator('#flow-matrix-kind').selectOption(kind);assert.deepEqual(await page.locator('#flow-matrix tbody td button').allTextContents(),expected.flat().map(String));
+  }
+  assert.deepEqual(await page.locator('#flow-commands tr td:nth-child(2)').allTextContents(),key==='relu'?['0x09','0x21','0x91','0xFF']:['0x08','0x20','0x80','0xFF']);
+  const wait=page.waitForEvent('download');await page.locator('#flow-json').click();const name=path.join(SCRATCH,'export-pdf-'+key+'.json');await(await wait).saveAs(name);const observed=JSON.parse(fs.readFileSync(name));assert.deepEqual(observed.raw,native.actual.mmu);assert.deepEqual(observed.output,analysis.actualHostOutput);assert.deepEqual(observed.timing,analysis.timing);
+ }
+ await page.locator('#flow-matrix-kind').selectOption('raw');await page.locator('[data-flow-cell="0,13"]').click();assert.equal(await page.locator('#flow-cell-title').textContent(),'C[0,13] → Y[0,13]');assert.deepEqual(await page.locator('#flow-values b').allTextContents(),['-3328','0']);assert((await page.locator('#flow-dot-terms').textContent()).endsWith('Σ = -3328'));
+ await page.locator('#flow-matrix-kind').selectOption('weights');await page.locator('[data-flow-cell="2,2"]').click();assert.equal(await page.locator('#flow-cell-title').textContent(),'C[0,13] → Y[0,13]');
+ await page.locator('#flow-matrix-kind').selectOption('output');await page.locator('[data-flow-cell="13,0"]').click();assert.deepEqual(await page.locator('#flow-values b').allTextContents(),['3328','13']);
+ await page.locator('#flow-stages [data-flow-stage="3"]').click();await page.locator('#flow-next').focus();await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>flowStage),4);await page.keyboard.press('ArrowLeft');assert.equal(await page.evaluate(()=>flowStage),3);
+ await page.locator('#flow-source').click();assert((await page.locator('#source-content').textContent()).includes('INPUT_REG_cs(i)(4*BYTE_WIDTH-1 downto 3*BYTE_WIDTH)'));await page.keyboard.press('Escape');
+ for(const [id,source] of [['flow-png','views/relu-03-activation.png'],['flow-zip','waveforms.zip'],['flow-report','waveform-report.pdf']]){
+  const wait=page.waitForEvent('download');await page.locator('#'+id).click();const dest=path.join(SCRATCH,id+'-download');await(await wait).saveAs(dest);assert(fs.readFileSync(dest).equals(fs.readFileSync(path.join(ROOT,'pdf-dataflow',source))));
+ }
+ await page.locator('#flow-zoom').evaluate(input=>{input.value='2';input.dispatchEvent(new Event('input',{bubbles:true}))});assert.equal(await page.locator('#flow-zoom-value').textContent(),'200%');assert(await page.locator('#flow-wave-viewport').evaluate(el=>el.scrollWidth>el.clientWidth));
+ await page.locator('#flow-zoom').evaluate(input=>{input.value='1';input.dispatchEvent(new Event('input',{bubbles:true}))});
+ await page.screenshot({path:path.join(SCRATCH,'dataflow-desktop.png'),fullPage:true});
  await page.locator('#tab-isa').click();assert.equal(await page.locator('#packed-hex').textContent(),'0x00000000000000000E09');
  await page.locator('#opcode').selectOption('153');await page.locator('#buffer-address').fill('14');assert.equal(await page.locator('#packed-hex').textContent(),'0x00000E00000000000E99');assert.equal(await page.locator('#text-command').textContent(),'[153,14,0,14]');
  await page.locator('#acc-address').fill('65536');assert((await page.locator('#pack-error').textContent()).includes('超出'));assert(await page.locator('#copy-command').isDisabled());
@@ -61,8 +91,8 @@ const {chromium}=require('playwright');const fs=require('fs');const path=require
  await page.locator('#help-open').click();assert(await page.locator('#help-dialog').isVisible());await page.keyboard.press('Escape');
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(SCRATCH,'mobile.png'),fullPage:true});
  let overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);assert(!overflow,'Mobile body overflow');
- for(const tab of ['system','isa','evidence']){await page.locator('#tab-'+tab).click();assert(!await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),'Mobile '+tab+' overflow')}
+ for(const tab of ['system','dataflow','isa','evidence']){await page.locator('#tab-'+tab).click();assert(!await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),'Mobile '+tab+' overflow');if(tab==='dataflow')await page.screenshot({path:path.join(SCRATCH,'dataflow-mobile.png'),fullPage:true})}
  await page.locator('#tab-lab').click();await page.locator('#mode').selectOption('clock');await page.locator('#reset').click();await page.locator('#speed').selectOption('200');await page.locator('#play').click();await page.waitForTimeout(460);assert((await page.locator('#time').textContent())!=='15 ns');await page.locator('#play').click();
  assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
- await browser.close();fs.writeFileSync(path.join(ROOT,'evidence/browser-checks.txt'),'PASS: desktop and 390px mobile; 38 MMU and 252 system sample renders; 32 MMU and 392 system result comparisons; step/clock/play; actual 8-command system program; source dialog; waveform seeking; CSV/SVG/JSON/VCD export; BigInt encoding and range validation; zero JS errors; zero network requests.\n');console.log('Browser checks: PASS');
+ await browser.close();fs.writeFileSync(path.join(ROOT,'evidence/browser-checks.txt'),'PASS: desktop and 390px mobile; 38 MMU and 252 system sample renders; 32 MMU and 392 system result comparisons; step/clock/play; actual 8-command system program; PDF dataflow chapter with both cases and 12 exact GTKWave PNGs; all 14x14 observed matrices; signed point-product selection; six-stage keyboard navigation; exact offline PNG/ZIP/PDF downloads and observed JSON exports; source dialog; waveform seeking; CSV/SVG/JSON/VCD export; BigInt encoding and range validation; zero JS errors; zero network requests.\n');console.log('Browser checks: PASS');
 })().catch(e=>{console.error(e);process.exit(1)})

@@ -20,6 +20,7 @@
 <div class="panel"><div class="head"><div><span class="eyebrow">03 / SCOPE</span><h3>本轮验证的范围</h3></div></div><div class="section-body"><div class="table-scroll"><table><thead><tr><th>能力</th><th>结论</th><th>边界</th></tr></thead><tbody>
 <tr><td>有符号加载、乘法、覆盖与二轮累加、ReLU、同步及主机读回</td><td class="pass">模块与两套完整系统通过</td><td>N=14；A[i,j]=4(i−j)，W=64I；TPU 测试缓存深度 32 / 64，AXI 采用默认容量</td></tr>
 <tr><td>AXI 字节写、响应背压与并发地址仲裁</td><td class="pass">指定回归通过</td><td>这些检查不等于覆盖整个 AXI 协议空间</td></tr>
+<tr><td>PDF 指令流：直通 / 有符号 ReLU 两组 AXI 实验</td><td class="pass">每组 196 输出字节 + 28 填充字节通过</td><td>N=14；另核对每组 196 权重、196 原始点积与 196 激活字节。真实 GTKWave 波形和数据在“PDF 数据流实验”查看；未覆盖 ReLU 正向饱和边界</td></tr>
 <tr><td>Sigmoid、ReLU 饱和边界、随机长序列、其他旧 testbench</td><td>未验证</td><td>不把当前两轮样例推广为任意网络或所有边界输入已正确</td></tr>
 <tr><td>Python 输入转换</td><td class="pass">环境设置时通过</td><td>N=2 的拆块与转置；TensorFlow 训练未验证</td></tr>
 <tr><td>Vivado 综合、时序、SDK / BSP、Zynq 板卡</td><td>未验证</td><td>需要对应工具链与板卡；README 的 177.77 MHz / 72.18 GOPS 是历史评估</td></tr>

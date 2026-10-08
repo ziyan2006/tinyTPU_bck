@@ -1,6 +1,6 @@
 """Build an offline Chinese index and a PDF containing real GTKWave exports."""
 from pathlib import Path
-import os,json,hashlib,html,re
+import os,json,hashlib,html,re,zipfile
 import fitz
 
 HERE=Path(__file__).resolve().parent
@@ -26,6 +26,18 @@ for case in DATA:
  for stem,_,_ in STAGES:
   for suffix in ['png','pdf','ps','gtkw']:
    assert (VIEWS/(case+'-'+stem+'.'+suffix)).is_file()
+
+# Rebuild the downloadable pictures whenever the native figures are regenerated.
+# This keeps the standalone teaching page and its ZIP on the same evidence.
+zip_path=BASE/'waveforms.zip'
+with zipfile.ZipFile(zip_path,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
+ for case in DATA:
+  folder='直通-0x80' if case=='passthrough' else '有符号ReLU-0x91'
+  for i,(stem,title,_) in enumerate(STAGES,1):
+   archive.write(VIEWS/(case+'-'+stem+'.png'),folder+'/'+f'{i:02d}-'+title.replace('与 ','与')+'.png')
+with zipfile.ZipFile(zip_path) as archive:
+ assert archive.testzip() is None and len(archive.namelist())==12
+zip_path.with_suffix('.zip.sha256').write_text(hashlib.sha256(zip_path.read_bytes()).hexdigest()+'  waveforms.zip\n')
 
 bundle={case:{'title':CASE_TITLE[case],'analysis':DATA[case],'native':NATIVE[case]} for case in DATA}
 payload=json.dumps({'cases':bundle,'stages':STAGES},ensure_ascii=False).replace('</','<\\/')
@@ -105,7 +117,7 @@ doc.close()
 (BASE/'README.md').write_text((HERE/'README.md').read_text())
 files=[p for p in OUT.iterdir() if p.is_file() and (p.name in ['build.log','import.log','timings.json','manifest.json'] or p.name.startswith(('passthrough','relu')))]
 files += [p for p in VIEWS.iterdir() if p.is_file() and (p.name in ['gtkwaverc','views.json'] or p.name.startswith(tuple(case+'-'+stem for case in DATA for stem in ['native']+[s[0] for s in STAGES])))]
-files += [BASE/'index.html',BASE/'README.md',BASE/'waveform-report.pdf']
+files += [BASE/'index.html',BASE/'README.md',BASE/'waveform-report.pdf',zip_path,zip_path.with_suffix('.zip.sha256')]
 sourcefiles=[p for p in HERE.iterdir() if p.is_file() and p.suffix in ['.py','.vhdl','.opt','.md']]
 record={'rtlCommit':MAN['repositoryCommit'],'ghdlVersion':'5.0.1','gtkwaveVersion':'3.3.121','casesPassed':['passthrough','relu'],'nativeValuesCheckedPerCase':NATIVE['relu']['checkedValues'],'filesSha256':{str(p.relative_to(BASE)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(files)},'experimentSourceSha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(sourcefiles)}}
 (BASE/'artifact-manifest.json').write_text(json.dumps(record,indent=2,ensure_ascii=False))

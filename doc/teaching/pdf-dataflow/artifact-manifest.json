@@ -108,7 +108,7 @@
     "views/relu-native-gtk.log": "39e4e81e847800143b1d3890df4f1f6759f90d7fec82c9bcb081964154e2bce2",
     "views/relu-native.tcl": "6844967561cf8e3177f48c827e8f6addb4e164d2027f078c5221838db9700e19",
     "views/views.json": "3e86e81137fd71311a1fe28cd4b8567076edf2a3906f6489ebfe417b43272635",
-    "waveform-report.pdf": "d98d00b56f3894285f933e5c0896e6cc241837d1f8ca43f4b0f82a4ff15d6cc7",
+    "waveform-report.pdf": "22f26755de35571ecddc35962d641f87927ea9691b1ddab98611bbef4e0fc233",
     "waveforms.zip": "a707668f61761150e22a37d41c86ba5ee4b0c312712df8d0a3750bf065a731fc",
     "waveforms.zip.sha256": "5ace2b2d3cc65d574d165857bfd17db726bbdf0982ed9765ebb93f26dc88cd23"
   },
@@ -116,7 +116,7 @@
     "README.md": "292c6c7464d1b8c05e6323205b7db13c980d250d53441fe6cf7cdd54602fa6e8",
     "TB_PDF_DATAFLOW.vhdl": "0919d03d38d9354a6865defddea751cbad5082e5e210a51ffe52efcc34db8a16",
     "analyze_vcd.py": "83382a86f906f46a279d453b6e622e44c97de8760c67a618cd7d4d7116ab9322",
-    "build_report.py": "9dc40a94bd4ad5d6ebb07dc0f20e8a74f79600026d6fe4753e088025ae88f947",
+    "build_report.py": "f36642e0c00be999ffbfc6cc201e7f3fbdc4590e1ac26035d7ddc2167b5886ac",
     "render_gtkwave.py": "6d0784808cc5b6730d7b9a4a7290815129a6bbdda60f5d3e0644e9ba31bd93c8",
     "run_simulations.py": "0f85ed33c91b4790f40eafd633eb9f9b3a595e866174a6c073983e2f4120d09a",
     "signals.opt": "145d1bba9d5299daf0daeb837fa78269942d904d21c2bf87964f62172614c344"

@@ -1,0 +1,27 @@
+<section id="dataflow" role="tabpanel" aria-labelledby="tab-dataflow" hidden>
+  <div class="notice"><strong>把 PDF 的每条通路接到真实波形。</strong>两组都由 AXI 写入数据和指令，实际执行 <code>read_weights 0 14 → matrix_multiply 0 0 14 → activate 0 0 14 → synchronise</code>。激活原地回写统一缓存；每组 196 个输出字节全部核对通过。</div>
+  <div class="panel toolbar">
+    <div class="field"><label for="flow-case">选择实验</label><select id="flow-case"><option value="passthrough">直通 · 0x80 · 无符号输入</option><option value="relu">有符号 ReLU · 0x91 · 正负输入</option></select></div>
+    <div class="buttons"><button id="flow-prev" aria-label="上一教学阶段">← 上一步</button><button id="flow-next" class="primary">下一步 →</button></div>
+    <div class="flow-downloads"><button class="quiet" id="flow-zip">下载全部 12 张波形 ZIP ↓</button><button class="quiet" id="flow-report">下载中文报告 PDF ↓</button></div>
+  </div>
+  <div class="panel lesson">
+    <span class="eyebrow">PDF DATAFLOW / 六个教学阶段</span>
+    <div class="chips flow-chapters" id="flow-stages" role="group" aria-label="选择数据流阶段"></div>
+    <div class="lesson-grid"><div><h2 id="flow-title"></h2><p class="action" id="flow-action"></p><div class="reasons"><div><span>为什么这样做？</span><p id="flow-why"></p></div><div><span>波形里怎样确认？</span><p id="flow-check"></p></div></div><p class="flow-next-note" id="flow-next-note"></p></div><div class="example"><span class="eyebrow">本阶段通路</span><p id="flow-path"></p><strong id="flow-count"></strong><p class="muted" id="flow-count-note"></p><button class="quiet" id="flow-source">看对应 RTL 源码 ↗</button></div></div>
+    <div class="progress"><i id="flow-progress"></i></div>
+  </div>
+  <div class="panel">
+    <div class="head"><div><span class="eyebrow">01 / GTKWave · 实际连续事件</span><h3 id="flow-wave-title"></h3></div><div class="split-actions"><div class="field"><label for="flow-zoom">波形放大 <span id="flow-zoom-value">100%</span></label><input id="flow-zoom" type="range" min="1" max="3" step="0.25" value="1"></div><button class="quiet" id="flow-png">下载本图 PNG ↓</button></div></div>
+    <div class="section-body"><div class="flow-wave-viewport" id="flow-wave-viewport" tabindex="0" aria-label="GTKWave 波形，可横向滚动"><img id="flow-wave-image" alt="" loading="lazy"></div><p class="wave-note">原始 GTKWave 导出，白底保留实际波形。字母标记是上升沿前有效信号被消费的采样沿；主光标置于所选沿前 1 fs。窄格中的“+”是文字省略，完整数值见下方矩阵。数据仅在相应使能或 VALID/READY 握手时有效。</p><div class="flow-evidence-grid"><div><h3 class="flow-small-title">跟着标记看时序</h3><div class="table-scroll"><table><thead><tr><th>标记</th><th>采样沿</th><th>观察事件</th></tr></thead><tbody id="flow-markers"></tbody></table></div></div><div><h3 class="flow-small-title">这几个信号怎么读</h3><div id="flow-signals"></div></div></div></div>
+  </div>
+  <div class="panel">
+    <div class="head"><div><span class="eyebrow">02 / PROGRAM · 真正提交的 80 位指令</span><h3>两组只改变符号与激活选项</h3></div><button class="quiet" data-source="doc/teaching/pdf-dataflow/TB_PDF_DATAFLOW.vhdl">看实际 testbench ↗</button></div>
+    <div class="section-body"><p class="disclaimer">前三条长度均为 14、所有起始地址为 0，同步长度为 0。下表区分主机开始提交指令的时刻与核心消费的采样沿；点击操作可跳到该阶段。同步一栏的采样沿是主机消费 IRQ 的时刻。</p><div class="table-scroll"><table class="commands-table"><thead><tr><th>操作</th><th>Opcode</th><th>长度</th><th>主机开始提交</th><th>核心/IRQ 采样</th><th>80 位指令</th></tr></thead><tbody id="flow-commands"></tbody></table></div><p class="sidenote">控制与数据流水允许重叠：乘法启动不等于权重已经全部加载；激活启动不等于 MMU 已经写完全部结果。PDF 的周期数字必须使用相同的起止点后比较，不能直接当作整条指令的耗时。</p></div>
+  </div>
+  <div class="panel">
+    <div class="head"><div><span class="eyebrow">03 / A × W → C → Y</span><h3>选一个元素，把输入、原始点积和输出连起来</h3></div><button class="quiet" id="flow-json">导出本组实测数据 JSON ↓</button></div>
+    <div class="section-body"><p id="flow-formula" class="flow-formula"></p><p class="sidenote" id="flow-activation-note"></p><div class="flow-matrix-tools"><div class="field"><label for="flow-matrix-kind">查看矩阵</label><select id="flow-matrix-kind"><option value="output">Y · 实际 AXI 读回输出</option><option value="raw">C · GTKWave 原始 32 位点积</option><option value="input">A · testbench 初始化输入</option><option value="weights">W · GTKWave 实际加载权重</option></select></div><div class="field"><label for="flow-row">输出行 i</label><select id="flow-row"></select></div><div class="field"><label for="flow-column">输出通道 j</label><select id="flow-column"></select></div></div><div class="flow-matrix-layout"><div class="table-scroll flow-matrix-scroll"><table class="flow-matrix" id="flow-matrix"></table></div><aside class="flow-dot"><span class="eyebrow">当前选中的输出元素</span><h3 id="flow-cell-title"></h3><div class="flow-values" id="flow-values"></div><p class="muted" id="flow-cell-times"></p><details><summary>展开这条点积的 14 项</summary><pre id="flow-dot-terms"></pre></details><p id="flow-cell-check" class="flow-pass"></p></aside></div><p class="wave-note">A 来自该 testbench 的初始化数据；W 和 C 来自 GTKWave 原生 GHW 逐向量采样；Y 来自真实 AXI RDATA 握手。选择 A/W 的格子只高亮其坐标；右侧独立选择的 i、j 始终对应输出 C/Y。</p></div>
+  </div>
+  <div class="panel"><div class="head"><div><span class="eyebrow">04 / OBSERVED · 实际结论</span><h3>看结果，也看结果什么时候有效</h3></div></div><div class="section-body"><div class="flow-results" id="flow-results"></div><details><summary>本组端到端自检日志</summary><pre class="flow-log" id="flow-log"></pre></details><p class="sidenote">每组核对 196 个权重值、196 个原始点积、196 个激活写回字节，以及 196 个主机输出字节和 28 个填充字节。ReLU 组含负、零、正值，但未触发正向饱和；这两组不等于穷举全部指令或 AXI 背压。无效流水周期的 U/X、空闲地址变化和默认响应保留在图中。</p><p class="muted" id="flow-provenance"></p></div></div>
+</section>
