@@ -4,7 +4,7 @@
 
 ## 在线访问与发布
 
-[GitHub Pages 站点地址](https://ziyan2006.github.io/tinyTPU_bck/)：首次启用 Pages 并完成发布后可以访问，与离线版使用相同文件，支持两组 PDF 数据流实验、全部波形和下载功能。
+[GitHub Pages 站点地址](https://ziyan2006.github.io/tinyTPU_bck/)：仓库已启用 Pages，部署完成后可以访问，与离线版使用相同文件，支持两组 PDF 数据流实验、全部波形和下载功能。
 
 首次发布：打开仓库 **Settings → Pages**，在 **Build and deployment** 中选择 **Deploy from a branch → master → / (root)**，点击 **Save** 并等待部署完成。根目录 `index.html` 使用相对路径跳转到本目录的 `tinyTPU-lab.html`，兼容项目站点的 `/tinyTPU_bck/` 路径；`.nojekyll` 保证直接发布静态文件。无需前端依赖、服务器或在 Pages 上运行 GHDL。
 
