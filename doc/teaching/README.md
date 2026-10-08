@@ -2,6 +2,14 @@
 
 直接用浏览器打开 `tinyTPU-lab.html`。独立离线页面内含真实轨迹、24 个源码文件、12 张原生 GTKWave 波形、实测矩阵、日志、修复补丁与 MMU 原始 VCD，无网络字体或前端依赖。PNG、波形 ZIP、中文 PDF 报告及实验 JSON 均可直接从页面离线下载。
 
+## 在线访问与发布
+
+[GitHub Pages 站点地址](https://ziyan2006.github.io/tinyTPU_bck/)：首次启用 Pages 并完成发布后可以访问，与离线版使用相同文件，支持两组 PDF 数据流实验、全部波形和下载功能。
+
+首次发布：打开仓库 **Settings → Pages**，在 **Build and deployment** 中选择 **Deploy from a branch → master → / (root)**，点击 **Save** 并等待部署完成。根目录 `index.html` 使用相对路径跳转到本目录的 `tinyTPU-lab.html`，兼容项目站点的 `/tinyTPU_bck/` 路径；`.nojekyll` 保证直接发布静态文件。无需前端依赖、服务器或在 Pages 上运行 GHDL。
+
+修改教学模板或数据后，先运行 `python3 doc/teaching/build_page.py` 和 `node doc/teaching/verify_page.cjs`，再将源文件与生成的 `tinyTPU-lab.html` 一起提交、推送到 `master`。GitHub 会自动更新站点；只修改模板而未重新生成 HTML 不会改变在线页面。Pages 发布的是已有仿真证据，运行仿真仍需本地 GHDL / GTKWave。
+
 ## 教学内容
 
 1. 4×4 阵列基础：原 MMU testbench 的两组矩阵、16 个 MACC 寄存器、38 个上升沿、逐步骤 / 逐时钟与点积解释。

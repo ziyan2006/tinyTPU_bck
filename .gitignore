@@ -23,6 +23,8 @@
 !.gitignore
 !LICENSE.txt
 !getting_started.pdf
+!index.html
+!.nojekyll
 
 # include vhdl sources
 !src/vhdl/**/*.vhdl
